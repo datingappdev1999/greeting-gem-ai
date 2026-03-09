@@ -13,7 +13,7 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <a href="/" className="flex items-center">
-          <img src={logo} alt="Velvet Postbox" className="h-12 md:h-14 w-auto" />
+          <img src={logo} alt="Velvet Postbox" className="h-16 md:h-20 w-auto" />
         </a>
 
         {/* Desktop Nav */}
