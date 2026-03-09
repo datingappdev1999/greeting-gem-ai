@@ -1,6 +1,7 @@
-import { Heart, Search, ShoppingBag, Sparkles, Menu } from "lucide-react";
+import { Heart, Search, ShoppingBag, Menu } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/assets/VP_logo.png";
 
 const navLinks = ["Cards", "Gifts", "Flowers", "Occasions", "Create Your Own"];
 
