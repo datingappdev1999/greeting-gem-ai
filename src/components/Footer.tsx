@@ -7,7 +7,7 @@ const Footer = () => (
         <div>
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
-            <span className="font-display text-lg">CardCraft</span>
+            <span className="font-display text-lg">Velvet Postbox</span>
           </div>
           <p className="text-sm text-primary-foreground/60">
             AI-powered greeting cards for every moment that matters.
@@ -33,7 +33,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="border-t border-primary-foreground/10 pt-6 text-center text-xs text-primary-foreground/40">
-        © 2026 CardCraft. All rights reserved.
+        © 2026 Velvet Postbox. All rights reserved.
       </div>
     </div>
   </footer>

@@ -13,7 +13,7 @@ const Header = () => {
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-primary" />
-          <span className="font-display text-xl md:text-2xl text-foreground">CardCraft</span>
+          <span className="font-display text-xl md:text-2xl text-foreground">Velvet Postbox</span>
         </a>
 
         {/* Desktop Nav */}
