@@ -1,6 +1,7 @@
-import { Heart, Search, ShoppingBag, Sparkles, Menu } from "lucide-react";
+import { Heart, Search, ShoppingBag, Menu } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/assets/VP_logo.png";
 
 const navLinks = ["Cards", "Gifts", "Flowers", "Occasions", "Create Your Own"];
 
@@ -11,9 +12,8 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-card/90 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-primary" />
-          <span className="font-display text-xl md:text-2xl text-foreground">Velvet Postbox</span>
+        <a href="/" className="flex items-center">
+          <img src={logo} alt="Velvet Postbox" className="h-12 md:h-14 w-auto" />
         </a>
 
         {/* Desktop Nav */}
