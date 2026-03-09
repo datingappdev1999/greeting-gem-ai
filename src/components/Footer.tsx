@@ -33,7 +33,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="border-t border-primary-foreground/10 pt-6 text-center text-xs text-primary-foreground/40">
-        © 2026 CardCraft. All rights reserved.
+        © 2026 Velvet Postbox. All rights reserved.
       </div>
     </div>
   </footer>

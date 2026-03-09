@@ -53,7 +53,7 @@ const OccasionsGrid = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <div className={`absolute inset-x-0 bottom-0 p-4 ${occasion.color}/90 backdrop-blur-sm`}>
+              <div className={`absolute inset-x-0 bottom-0 p-4 ${occasion.color} backdrop-blur-sm`}>
                 <h3 className={`font-display text-lg ${occasion.accent} font-normal`}>
                   {occasion.title}
                 </h3>
