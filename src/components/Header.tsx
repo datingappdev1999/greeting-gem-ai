@@ -1,31 +1,40 @@
 import { Heart, Search, ShoppingBag, Menu } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/VP_logo.png";
 
-const navLinks = ["Cards", "Gifts", "Flowers", "Occasions", "Create Your Own"];
+const navLinks: { label: string; to: string }[] = [
+  { label: "Cards", to: "/#shop-by-occasion" },
+  { label: "Gifts", to: "/gifts/chocolates" },
+  { label: "Flowers", to: "/gifts/flowers" },
+  { label: "Occasions", to: "/#shop-by-occasion" },
+  { label: "Create Your Own", to: "/?create=1" },
+];
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNavClick = () => setMobileOpen(false);
 
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <a href="/" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <img src={logo} alt="Velvet Postbox" className="h-16 md:h-20 w-auto" />
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link}
-              href="#"
+          {navLinks.map(({ label, to }) => (
+            <Link
+              key={label}
+              to={to}
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-              {link}
-            </a>
+              {label}
+            </Link>
           ))}
         </nav>
 
@@ -62,14 +71,15 @@ const Header = () => {
             className="md:hidden overflow-hidden border-t border-border bg-card"
           >
             <div className="container py-4 flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link}
-                  href="#"
+              {navLinks.map(({ label, to }) => (
+                <Link
+                  key={label}
+                  to={to}
+                  onClick={handleNavClick}
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
                 >
-                  {link}
-                </a>
+                  {label}
+                </Link>
               ))}
             </div>
           </motion.nav>

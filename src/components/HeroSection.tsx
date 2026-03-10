@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.jpg";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  onOpenGenerateWithAI?: () => void;
+}
+
+const HeroSection = ({ onOpenGenerateWithAI }: HeroSectionProps) => {
   return (
     <section className="relative overflow-hidden">
       {/* Hero Image */}
@@ -40,12 +44,13 @@ const HeroSection = () => {
                   Browse Cards
                   <ArrowRight className="w-4 h-4" />
                 </a>
-                <a
-                  href="#"
+                <button
+                  type="button"
+                  onClick={() => onOpenGenerateWithAI?.()}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-card/20 backdrop-blur-sm text-primary-foreground font-medium text-sm border border-primary-foreground/20 hover:bg-card/30 transition-colors"
                 >
-                  Create Your Own
-                </a>
+                  Generate with AI
+                </button>
               </div>
             </motion.div>
           </div>

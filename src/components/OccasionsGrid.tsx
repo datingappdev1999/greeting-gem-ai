@@ -1,23 +1,19 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import mothersDay from "@/assets/mothers-day.jpg";
-import easter from "@/assets/easter.jpg";
-import fathersDay from "@/assets/fathers-day.jpg";
-import wedding from "@/assets/wedding.jpg";
-import newBaby from "@/assets/new-baby.jpg";
-import condolences from "@/assets/condolences.jpg";
+import { OCCASIONS } from "@/lib/occasionsData";
 
-const occasions = [
-  { title: "Mother's Day", image: mothersDay, color: "bg-coral-light", accent: "text-coral" },
-  { title: "Easter", image: easter, color: "bg-lavender-light", accent: "text-lavender" },
-  { title: "Father's Day", image: fathersDay, color: "bg-sky-light", accent: "text-sky" },
-  { title: "Weddings", image: wedding, color: "bg-gold-light", accent: "text-gold" },
-  { title: "New Baby", image: newBaby, color: "bg-sage-light", accent: "text-sage" },
-  { title: "Condolences", image: condolences, color: "bg-rose-light", accent: "text-rose" },
-];
+const slugToStyles: Record<string, { color: string; accent: string }> = {
+  "mothers-day": { color: "bg-coral-light", accent: "text-coral" },
+  easter: { color: "bg-lavender-light", accent: "text-lavender" },
+  "fathers-day": { color: "bg-sky-light", accent: "text-sky" },
+  weddings: { color: "bg-gold-light", accent: "text-gold" },
+  "new-baby": { color: "bg-sage-light", accent: "text-sage" },
+  condolences: { color: "bg-rose-light", accent: "text-rose" },
+};
 
-const OccasionsGrid = () => {
+const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => void }) => {
   return (
-    <section id="occasions" className="py-16 md:py-24">
+    <section id="shop-by-occasion" className="py-16 md:py-24">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,35 +28,53 @@ const OccasionsGrid = () => {
           <p className="text-muted-foreground max-w-md mx-auto">
             Find the perfect card for every life moment, personalised with AI to make it truly special.
           </p>
+          <button
+            type="button"
+            onClick={() => onOpenGenerateWithAI?.()}
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+          >
+            Generate with AI
+          </button>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {occasions.map((occasion, i) => (
-            <motion.a
-              key={occasion.title}
-              href="#"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              whileHover={{ y: -6 }}
-              className="group relative rounded-xl overflow-hidden shadow-card hover:shadow-elevated transition-shadow cursor-pointer"
-            >
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={occasion.image}
-                  alt={`${occasion.title} greeting cards`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className={`absolute inset-x-0 bottom-0 p-4 ${occasion.color} backdrop-blur-sm`}>
-                <h3 className={`font-display text-lg ${occasion.accent} font-normal`}>
-                  {occasion.title}
-                </h3>
-                <p className="text-xs text-foreground/70 mt-0.5">Explore collection →</p>
-              </div>
-            </motion.a>
-          ))}
+          {OCCASIONS.map((occasion, i) => {
+            const styles = slugToStyles[occasion.slug] ?? {
+              color: "bg-muted",
+              accent: "text-foreground",
+            };
+            return (
+              <motion.div
+                key={occasion.slug}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                whileHover={{ y: -6 }}
+              >
+                <Link
+                  to={`/occasions/${occasion.slug}`}
+                  className="group relative block rounded-xl overflow-hidden shadow-card hover:shadow-elevated transition-shadow cursor-pointer"
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={occasion.heroImageUrl}
+                      alt={`${occasion.name} greeting cards`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div
+                    className={`absolute inset-x-0 bottom-0 p-4 ${styles.color} backdrop-blur-sm`}
+                  >
+                    <h3 className={`font-display text-lg ${styles.accent} font-normal`}>
+                      {occasion.name}
+                    </h3>
+                    <p className="text-xs text-foreground/70 mt-0.5">Explore collection →</p>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
