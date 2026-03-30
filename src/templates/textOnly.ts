@@ -75,3 +75,63 @@ export function createTextOnlyConfig(
     ],
   };
 }
+
+/**
+ * Pastel Eggs Grid: full artwork as background; editable headline (+ optional subheading)
+ * in the lower third where the design leaves open space.
+ */
+export function createEasterPastelEggsGridConfig(
+  id: string,
+  name: string,
+  textureUrl?: string
+): CardTemplateConfig {
+  return {
+    id,
+    name,
+    aspectRatio: 3 / 4,
+    elements: [
+      {
+        id: "bg",
+        type: "background",
+        zIndex: 0,
+        position: { x: 0, y: 0 },
+        size: { width: 100, height: 100 },
+        fill: "#FCF9F4",
+        assetUrl: textureUrl,
+        assetOpacity: 1,
+      },
+      {
+        id: "headline",
+        type: "headline",
+        zIndex: 2,
+        position: { x: "center", y: 74 },
+        size: { width: 88, height: 14 },
+        style: {
+          fontFamily: "'Dancing Script', cursive",
+          fontSize: 1.35,
+          fontWeight: "light",
+          color: "#5c4d6b",
+          align: "center",
+          lineClamp: 3,
+        },
+        defaultTextKey: "headline",
+      },
+      {
+        id: "subheading",
+        type: "subheading",
+        zIndex: 2,
+        position: { x: "center", y: 88 },
+        size: { width: 85, height: 10 },
+        style: {
+          fontFamily: "inherit",
+          fontSize: 0.95,
+          fontWeight: "light",
+          color: "hsl(var(--muted-foreground))",
+          align: "center",
+          lineClamp: 2,
+        },
+        defaultTextKey: "subheading",
+      },
+    ],
+  };
+}

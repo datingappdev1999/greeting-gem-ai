@@ -28,7 +28,7 @@ export type TextAlign = "left" | "center" | "right";
 export interface TextStyle {
   fontFamily: string;
   fontSize: number; // rem or px - we use Tailwind scale: 1 = xs, 2 = sm, 3 = base, 4 = lg, 5 = xl, 6 = 2xl, 7 = 3xl, 8 = 4xl
-  fontWeight: "normal" | "medium" | "semibold" | "bold";
+  fontWeight: "light" | "normal" | "medium" | "semibold" | "bold";
   color: string; // CSS color or Tailwind token name
   align: TextAlign;
   lineClamp?: number; // max lines
@@ -95,6 +95,14 @@ export type CardElement =
   | TextElement
   | DecorativeElement;
 
+// New names requested in the latest architecture description.
+// These are aliases so existing code (CardTemplateRenderer, etc.) continues to work.
+export type CardTemplate = CardTemplateConfig;
+export type CardElementUnion = CardElement;
+export type TextElementSlot = TextElement;
+export type ImageElement = ImageFrameElement;
+export type DecorationElement = DecorativeElement;
+
 export interface CardTemplateConfig {
   id: string;
   name: string;
@@ -109,20 +117,56 @@ export interface CardUserContent {
   headline: string;
   subheading?: string;
   body?: string;
-  /** Data URL or URL of uploaded photo; replaces imageFrame placeholder */
+  /** Data URL or URL of uploaded photo; replaces imageFrame placeholder (single-photo templates) */
   photoUrl: string | null;
+  /** Multi-photo templates: elementId -> data URL. When set, imageFrame uses this over photoUrl. */
+  photoUrls?: Record<string, string | null>;
+  /** Text on the inside left panel when the card is opened */
+  insideLeftMessage?: string;
+  /** Text on the inside right panel when the card is opened (legacy single field). */
+  insideRightMessage?: string;
+  /** Inside right page: top text box */
+  insideRightTop?: string;
+  /** Inside right page: middle text box */
+  insideRightMiddle?: string;
+  /** Inside right page: bottom text box */
+  insideRightBottom?: string;
+  /** Text on the back of the card */
+  backMessage?: string;
 }
+
+// Alias requested name
+export type UserCardContent = CardUserContent;
 
 /** Default content for a template (e.g. "Happy Mother's Day!") */
 export function createDefaultUserContent(
   headline = "",
   subheading?: string,
-  body?: string
+  body?: string,
+  insideRightMessage?: string,
+  insideLeftMessage?: string,
+  backMessage?: string,
+  insideRightTop?: string,
+  insideRightMiddle?: string,
+  insideRightBottom?: string
 ): CardUserContent {
   return {
     headline: headline || "Your message",
     subheading,
     body,
     photoUrl: null,
+    insideLeftMessage,
+    insideRightMessage,
+    insideRightTop,
+    insideRightMiddle,
+    insideRightBottom,
+    backMessage,
   };
+}
+
+/** Image frame element ids for multi-photo templates */
+export function getImageFrameIds(elements: CardElement[]): string[] {
+  return elements
+    .filter((el): el is ImageFrameElement => el.type === "imageFrame")
+    .map((el) => el.id);
 }

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -15,6 +15,7 @@ function getOccasion(slug: string | undefined): Occasion | undefined {
 
 const OccasionPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const occasion = getOccasion(slug);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateCard | null>(null);
@@ -34,11 +35,15 @@ const OccasionPage = () => {
     template: TemplateCard;
     message: string;
     photoUrl: string | null;
+    insideLeftMessage?: string;
+    insideRightMessage?: string;
+    backMessage?: string;
     flowerId: string | null;
     chocolateId: string | null;
   }) => {
-    // TODO: navigate to customise page or cart
-    console.log("Continue & Customise", payload);
+    if (occasion) {
+      navigate(`/occasions/${occasion.slug}/customise/${payload.template.id}`);
+    }
   };
 
   if (!occasion) {
@@ -170,6 +175,13 @@ const OccasionPage = () => {
                       </span>
                     ))}
                   </div>
+                  <Link
+                    to={`/occasions/${occasion.slug}/customise/${tpl.id}`}
+                    className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Customise
+                  </Link>
                 </div>
               </motion.article>
             ))}

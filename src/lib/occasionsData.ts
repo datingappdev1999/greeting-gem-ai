@@ -6,13 +6,13 @@ import newBabyImg from "@/assets/new-baby.jpg";
 import condolencesImg from "@/assets/condolences.jpg";
 
 // Mother's Day templates
-import mdFloralPhotoCollage from "@/assets/templates/md-floral-photo-collage.jpg";
+import mdFloralCanvasFront from "@/assets/templates/md-canvas-fold-front.png";
 import mdBoldBestMum from "@/assets/templates/md-bold-best-mum.jpg";
 import mdFunnyTechSupport from "@/assets/templates/md-funny-tech-support.jpg";
 import mdWatercolourBouquet from "@/assets/templates/md-watercolour-bouquet.jpg";
-import mdPhotoOvalFrame from "@/assets/templates/md-photo-oval-frame.jpg";
+const mdPhotoOvalFrame = "/templates/md-photo-oval-frame.png";
 // Easter templates
-import easterPastelEggs from "@/assets/templates/easter-pastel-eggs-grid.jpg";
+import easterPastelEggs from "@/assets/templates/easter-pastel-eggs-grid.png";
 import easterBunnyFrame from "@/assets/templates/easter-bunny-photo-frame.jpg";
 import easterSpringFlorals from "@/assets/templates/easter-spring-florals.jpg";
 import easterMinimalCross from "@/assets/templates/easter-minimal-cross.jpg";
@@ -102,7 +102,7 @@ export const OCCASIONS: Occasion[] = [
           "Four-photo grid framed with painterly flowers, perfect for favourite family memories.",
         primaryStyle: "photo-upload",
         secondaryStyles: ["floral", "handwritten"],
-        imageUrl: mdFloralPhotoCollage,
+        imageUrl: mdFloralCanvasFront,
         tags: ["photo upload", "floral", "sentimental"],
         layoutType: "multi-photo",
       },

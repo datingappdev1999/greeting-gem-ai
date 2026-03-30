@@ -1,10 +1,32 @@
 import type { CardTemplateConfig } from "@/types/cardTemplate";
 import type { TemplateCard } from "@/lib/occasionsData";
 import type { LayoutType } from "@/lib/occasionsData";
+import type { CardPreviewConfig } from "@/types/cardPreview";
 import { createOvalPhotoFrameConfig } from "./ovalPhotoFrame";
 import { createRectPhotoFrameConfig } from "./rectPhotoFrame";
 import { createArchPhotoFrameConfig } from "./archPhotoFrame";
-import { createTextOnlyConfig } from "./textOnly";
+import { createEasterPastelEggsGridConfig, createTextOnlyConfig } from "./textOnly";
+import { fathersDaySuperDadTemplate } from "./fathersDaySuperDad";
+import {
+  createMothersDayFloralCollageConfig,
+  getMdFloralPreviewConfig,
+} from "./mothersDayFloralCollage";
+
+/**
+ * Return the config-driven preview config for a template, if it has one.
+ * Used for the three-layer card preview (background, photo slots, frame overlay).
+ */
+export function getCardPreviewConfig(
+  template: CardTemplateConfig
+): CardPreviewConfig | null {
+  if (template.id === "md-floral-photo-collage") {
+    const bg = template.elements.find((el) => el.type === "background");
+    const backgroundImageUrl =
+      bg && "assetUrl" in bg && bg.assetUrl ? bg.assetUrl : "";
+    return getMdFloralPreviewConfig(backgroundImageUrl);
+  }
+  return null;
+}
 
 /**
  * Build a structured CardTemplateConfig from the existing TemplateCard
@@ -14,6 +36,21 @@ import { createTextOnlyConfig } from "./textOnly";
 export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateConfig {
   const { id, name, imageUrl } = templateCard;
   const layoutType: LayoutType = templateCard.layoutType;
+
+  // Special structured template for the \"Super Dad\" card.
+  if (id === "fd-bold-super-dad") {
+    return fathersDaySuperDadTemplate;
+  }
+
+  // Mother's Day Floral Photo Collage: full template image as background + 4 photo slots.
+  if (id === "md-floral-photo-collage") {
+    return createMothersDayFloralCollageConfig(templateCard.imageUrl);
+  }
+
+  // Easter Pastel Eggs: artwork fills the card; text editable in the lower area.
+  if (id === "easter-pastel-eggs-grid") {
+    return createEasterPastelEggsGridConfig(id, name, imageUrl);
+  }
 
   switch (layoutType) {
     case "single-photo-oval":
