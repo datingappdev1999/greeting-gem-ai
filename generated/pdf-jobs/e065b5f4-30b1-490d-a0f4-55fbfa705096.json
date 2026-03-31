@@ -1,0 +1,22 @@
+{
+  "templateId": "fd-grill-king",
+  "template": {
+    "id": "fd-grill-king",
+    "name": "Grill King",
+    "shortDescription": "Illustrated BBQ tools and flames with a tongue-in-cheek Grill King message.",
+    "primaryStyle": "funny",
+    "secondaryStyles": [],
+    "imageUrl": "/src/assets/templates/fd-grill-king.png",
+    "previewImageUrl": "/src/assets/templates/fd-grill-king.png",
+    "tags": [
+      "funny",
+      "hobby",
+      "bbq"
+    ],
+    "layoutType": "text-only"
+  },
+  "userContent": {
+    "headline": "Happy Father's Day!",
+    "photoUrl": null
+  }
+}

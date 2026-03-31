@@ -863,14 +863,14 @@ function ReviewStepContent({
 
   return (
     <div className="w-full">
-      <div className="space-y-6">
-        <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+      <div className="space-y-4">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h3 className="font-display text-xl text-foreground">Review your card</h3>
             <p className="text-sm font-semibold text-foreground tabular-nums">£{total.toFixed(2)}</p>
           </div>
-          <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2">
-            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+            <div className="w-[min(62vw,320px)] shrink-0 snap-start">
               <CardTemplateRenderer
                 template={reviewTemplateConfig}
                 userContent={userContent}
@@ -880,7 +880,7 @@ function ReviewStepContent({
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Front</p>
             </div>
-            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+            <div className="w-[min(62vw,320px)] shrink-0 snap-start">
               <CardInsideLeftPreview
                 insideLeftMessage={userContent.insideLeftMessage}
                 photo1Url={userContent.photoUrls?.["inside-left-photo-1"] ?? null}
@@ -892,7 +892,7 @@ function ReviewStepContent({
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Inside Left</p>
             </div>
-            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+            <div className="w-[min(62vw,320px)] shrink-0 snap-start">
               <CardInsideRightPreview
                 topText={userContent.insideRightTop}
                 middleText={userContent.insideRightMiddle}
@@ -903,7 +903,7 @@ function ReviewStepContent({
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Inside Right</p>
             </div>
-            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+            <div className="w-[min(62vw,320px)] shrink-0 snap-start">
               <CardBackPreview
                 backMessage={userContent.backMessage}
                 backgroundColor={insidePanelsBackgroundColor}
@@ -915,7 +915,8 @@ function ReviewStepContent({
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div className="sticky bottom-0 z-10 rounded-xl border border-border bg-background/95 backdrop-blur-sm p-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <Button
             type="button"
             variant="outline"
@@ -936,6 +937,7 @@ function ReviewStepContent({
           >
             {isGeneratingPdf ? "Preparing…" : "Checkout now"}
           </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,23 @@
+{
+  "templateId": "fd-tools-and-ties",
+  "template": {
+    "id": "fd-tools-and-ties",
+    "name": "Tools & Ties",
+    "shortDescription": "Classic illustrated tools and ties with a heartfelt Best Dad message.",
+    "primaryStyle": "traditional",
+    "secondaryStyles": [
+      "handwritten"
+    ],
+    "imageUrl": "/src/assets/templates/fd-tools-and-ties.png",
+    "previewImageUrl": "/src/assets/templates/fd-tools-and-ties.png",
+    "tags": [
+      "classic",
+      "heartfelt"
+    ],
+    "layoutType": "text-only"
+  },
+  "userContent": {
+    "headline": "Happy Father's Day!",
+    "photoUrl": null
+  }
+}

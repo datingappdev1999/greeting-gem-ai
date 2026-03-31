@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import type { Connect } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -8,10 +8,17 @@ import { existsSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import { chromium } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import Stripe from "stripe";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
+  const readServerEnv = (name: string): string | undefined => process.env[name] ?? env[name];
+
+  return ({
   server: {
     host: "127.0.0.1",
     port: 8080,
@@ -53,6 +60,64 @@ export default defineConfig(({ mode }) => ({
           });
         }
 
+        function getRequiredEnv(name: string): string {
+          const value = readServerEnv(name);
+          if (!value) {
+            throw new Error(`Missing required environment variable: ${name}`);
+          }
+          return value;
+        }
+
+        let browserPromise: Promise<Browser> | null = null;
+        let s3Client: S3Client | null = null;
+
+        function getS3Client(): S3Client {
+          if (s3Client) return s3Client;
+          const s3Region = readServerEnv("S3_REGION") ?? "lon1";
+          const s3Endpoint = getRequiredEnv("S3_ENDPOINT");
+          const s3AccessKeyId = getRequiredEnv("S3_ACCESS_KEY_ID");
+          const s3SecretAccessKey = getRequiredEnv("S3_SECRET_ACCESS_KEY");
+          s3Client = new S3Client({
+            region: s3Region,
+            endpoint: s3Endpoint,
+            forcePathStyle: false,
+            credentials: {
+              accessKeyId: s3AccessKeyId,
+              secretAccessKey: s3SecretAccessKey,
+            },
+          });
+          return s3Client;
+        }
+
+        async function getBrowser(): Promise<Browser> {
+          if (!browserPromise) {
+            browserPromise = chromium.launch().catch((err) => {
+              browserPromise = null;
+              throw err;
+            });
+          }
+          const browser = await browserPromise;
+          if (!browser.isConnected()) {
+            browserPromise = null;
+            return getBrowser();
+          }
+          return browser;
+        }
+
+        server.httpServer?.once("close", async () => {
+          if (!browserPromise) return;
+          try {
+            const browser = await browserPromise;
+            if (browser.isConnected()) {
+              await browser.close();
+            }
+          } catch {
+            // ignore shutdown cleanup failures
+          } finally {
+            browserPromise = null;
+          }
+        });
+
         const middleware: Connect.NextHandleFunction = async (req, res, next) => {
           try {
             if (!req.url) return next();
@@ -86,10 +151,9 @@ export default defineConfig(({ mode }) => ({
             if (req.method === "POST" && req.url === "/api/render-pdf") {
               const payload = await readJsonBody(req);
               const jobId = randomUUID();
+              const startedAt = Date.now();
               const jobsDir = path.resolve(__dirname, "generated/pdf-jobs");
-              const pdfDir = path.resolve(__dirname, "generated");
               await fs.mkdir(jobsDir, { recursive: true });
-              await fs.mkdir(pdfDir, { recursive: true });
               await fs.writeFile(
                 path.resolve(jobsDir, `${jobId}.json`),
                 JSON.stringify(payload, null, 2),
@@ -100,9 +164,9 @@ export default defineConfig(({ mode }) => ({
               const runtimeLocalUrl = server.resolvedUrls?.local?.[0]?.replace(/\/$/, "");
               const baseUrl =
                 runtimeLocalUrl ?? `http://127.0.0.1:${server.config.server.port ?? 8080}`;
-              const browser = await chromium.launch();
+              const browser = await getBrowser();
+              const page = await browser.newPage();
               try {
-                const page = await browser.newPage();
                 page.on("console", (msg) => {
                   if (msg.type() === "error") {
                     console.error(`[pdf:${jobId}] page console error: ${msg.text()}`);
@@ -118,9 +182,12 @@ export default defineConfig(({ mode }) => ({
                   timeout: 90_000,
                 });
 
-                const pdfPath = path.resolve(pdfDir, `${jobId}.pdf`);
-                await page.pdf({
-                  path: pdfPath,
+                const s3Bucket = readServerEnv("S3_BUCKET") ?? "customer-uploads";
+                const s3KeyPrefix = ((readServerEnv("S3_KEY_PREFIX") ?? "customer-uploads")).replace(
+                  /^\/+|\/+$/g,
+                  ""
+                );
+                const pdfBuffer = await page.pdf({
                   format: "A4",
                   landscape: true,
                   preferCSSPageSize: true,
@@ -128,23 +195,35 @@ export default defineConfig(({ mode }) => ({
                   margin: { top: "0", right: "0", bottom: "0", left: "0" },
                 });
 
+                const key = `${s3KeyPrefix}/pdf/${jobId}.pdf`;
+                await getS3Client().send(
+                  new PutObjectCommand({
+                    Bucket: s3Bucket,
+                    Key: key,
+                    Body: pdfBuffer,
+                    ContentType: "application/pdf",
+                  })
+                );
+
                 res.setHeader("Content-Type", "application/json");
                 res.end(
                   JSON.stringify({
                     jobId,
-                    pdfPath,
+                    pdfPath: `s3://${s3Bucket}/${key}`,
                   })
                 );
-                console.log(`[pdf:${jobId}] generated ${pdfPath}`);
+                console.log(
+                  `[pdf:${jobId}] generated and uploaded to s3://${s3Bucket}/${key} in ${Date.now() - startedAt}ms`
+                );
               } finally {
-                await browser.close();
+                await page.close();
               }
               return;
             }
 
             if (req.method === "POST" && req.url === "/api/create-checkout-session") {
               const payload = await readJsonBody(req);
-              const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+              const stripeSecretKey = readServerEnv("STRIPE_SECRET_KEY");
               if (!stripeSecretKey) {
                 res.statusCode = 500;
                 res.setHeader("Content-Type", "application/json");
@@ -229,4 +308,5 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-}));
+  });
+});
