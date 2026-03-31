@@ -22,6 +22,17 @@ export default defineConfig(({ mode }) => ({
     {
       name: "gg-pdf-backend",
       configureServer(server) {
+        // Dev-only: serve user-provided "easter ...2" background textures from Cursor assets.
+        // Keeps the landing/preview images unchanged while customizing uses the "2" templates.
+        const easter2AssetsBase = path.resolve(
+          __dirname,
+          "..",
+          ".cursor",
+          "projects",
+          "Users-alexandermcfadzean-greeting-gem-ai",
+          "assets"
+        );
+
         async function readJsonBody(req: any): Promise<any> {
           return new Promise((resolve, reject) => {
             let data = "";
@@ -42,6 +53,18 @@ export default defineConfig(({ mode }) => ({
         server.middlewares.use(async (req, res, next) => {
           try {
             if (!req.url) return next();
+
+            if (req.method === "GET" && req.url.startsWith("/easter2/")) {
+              const raw = req.url.split("/easter2/")[1]?.split("?")[0] ?? "";
+              const safeName = path.basename(decodeURIComponent(raw));
+              const filePath = path.resolve(easter2AssetsBase, safeName);
+              if (existsSync(filePath)) {
+                const buf = await fs.readFile(filePath);
+                res.setHeader("Content-Type", "image/png");
+                res.end(buf);
+                return;
+              }
+            }
 
             if (req.method === "GET" && req.url.startsWith("/api/pdf-job/")) {
               const jobId = decodeURIComponent(req.url.split("/api/pdf-job/")[1] ?? "");
@@ -70,22 +93,36 @@ export default defineConfig(({ mode }) => ({
                 "utf8"
               );
 
-              const baseUrl = `http://localhost:${server.config.server.port ?? 8080}`;
+              // Use the actual runtime dev URL (port can auto-increment when 8080 is occupied).
+              const runtimeLocalUrl = server.resolvedUrls?.local?.[0]?.replace(/\/$/, "");
+              const baseUrl =
+                runtimeLocalUrl ?? `http://127.0.0.1:${server.config.server.port ?? 8080}`;
               const browser = await chromium.launch();
               try {
                 const page = await browser.newPage();
+                page.on("console", (msg) => {
+                  if (msg.type() === "error") {
+                    console.error(`[pdf:${jobId}] page console error: ${msg.text()}`);
+                  }
+                });
+                page.on("pageerror", (err) => {
+                  console.error(`[pdf:${jobId}] page error: ${err.message}`);
+                });
                 await page.goto(`${baseUrl}/print?jobId=${encodeURIComponent(jobId)}`, {
                   waitUntil: "domcontentloaded",
                 });
-                await page.waitForFunction(() => (window as any).__GG_PRINT_READY === true, null, {
-                  timeout: 20_000,
-                });
+                await page.waitForFunction(
+                  () => (window as any).__GG_PRINT_READY === true,
+                  null,
+                  { timeout: 90_000 }
+                );
 
                 const pdfPath = path.resolve(pdfDir, `${jobId}.pdf`);
                 await page.pdf({
                   path: pdfPath,
                   format: "A4",
                   landscape: true,
+                  preferCSSPageSize: true,
                   printBackground: true,
                   margin: { top: "0", right: "0", bottom: "0", left: "0" },
                 });
@@ -97,6 +134,7 @@ export default defineConfig(({ mode }) => ({
                     pdfPath,
                   })
                 );
+                console.log(`[pdf:${jobId}] generated ${pdfPath}`);
               } finally {
                 await browser.close();
               }
@@ -105,9 +143,13 @@ export default defineConfig(({ mode }) => ({
 
             return next();
           } catch (e: any) {
+            const rawMessage = e?.message ?? String(e);
+            const message = /Executable doesn't exist|playwright install/i.test(rawMessage)
+              ? "Chromium is not installed for Playwright. Run: npx playwright install chromium"
+              : rawMessage;
             res.statusCode = 500;
             res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify({ error: "pdf_backend_error", message: e?.message ?? String(e) }));
+            res.end(JSON.stringify({ error: "pdf_backend_error", message }));
           }
         });
       },

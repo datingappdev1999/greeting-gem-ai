@@ -15,6 +15,7 @@ import ModernTemplateEditor from "@/components/ModernTemplateEditor";
 import MdPhotoOvalFrameEditor from "@/components/MdPhotoOvalFrameEditor";
 import { loadCardEditorState, saveCardEditorState } from "@/lib/cardEditorLocalStorage";
 import { renderPageToPngDataUrl, triggerPngDownload } from "@/lib/canvasCardCompose";
+import { templateHidesFrontHeadline } from "@/lib/cardTemplateFlags";
 import { cn } from "@/lib/utils";
 import { OCCASIONS, type Occasion, type TemplateCard } from "@/lib/occasionsData";
 import { getCardTemplateConfig } from "@/templates";
@@ -358,6 +359,9 @@ const OccasionEditorPage = () => {
                   setUserContent((prev) => ({ ...prev, ...patch }))
                 }
                 headlinePlaceholder={`Happy ${occasion.name}!`}
+                hideFrontHeadline={
+                  !!templateId && templateHidesFrontHeadline(templateId)
+                }
               />
             </div>
           </div>

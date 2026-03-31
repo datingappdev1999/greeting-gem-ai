@@ -2,7 +2,7 @@ import { Heart, Search, ShoppingBag, Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/VP_logo.png";
+import logo from "@/assets/velvet-postbox-logo.png";
 
 const navLinks: { label: string; to: string }[] = [
   { label: "Cards", to: "/#shop-by-occasion" },
@@ -22,7 +22,7 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Velvet Postbox" className="h-16 md:h-20 w-auto" />
+          <img src={logo} alt="Velvet Postbox" className="h-12 md:h-14 w-auto" />
         </Link>
 
         {/* Desktop Nav */}

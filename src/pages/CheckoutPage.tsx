@@ -52,7 +52,7 @@ export default function CheckoutPage() {
         <div className="rounded-xl border border-border bg-card p-5 shadow-card">
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium text-foreground block mb-1.5">
+              <label className="font-display text-sm font-medium text-foreground block mb-1.5">
                 Card number
               </label>
               <Input
@@ -64,7 +64,7 @@ export default function CheckoutPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground block mb-1.5">
+                <label className="font-display text-sm font-medium text-foreground block mb-1.5">
                   Expiry
                 </label>
                 <Input
@@ -75,7 +75,9 @@ export default function CheckoutPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground block mb-1.5">CVC</label>
+                <label className="font-display text-sm font-medium text-foreground block mb-1.5">
+                  CVC
+                </label>
                 <Input
                   value={cvc}
                   onChange={(e) => setCvc(e.target.value)}
@@ -87,16 +89,20 @@ export default function CheckoutPage() {
           </div>
 
           <div className="mt-6 border-t border-border pt-4">
-            <p className="text-sm font-medium text-foreground mb-2">Order summary</p>
+            <p className="font-display text-sm font-medium text-foreground mb-2">
+              Order summary
+            </p>
             <div className="text-sm text-muted-foreground space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-foreground/90">Card</span>
+                <span className="font-display text-foreground/90">Card</span>
                 <span className="tabular-nums text-foreground">£{cardPrice.toFixed(2)}</span>
               </div>
 
               {flower ? (
                 <div className="flex items-center justify-between">
-                  <span className="text-foreground/90">Flowers ({flower.name})</span>
+                  <span className="font-display text-foreground/90">
+                    Flowers ({flower.name})
+                  </span>
                   <span className="tabular-nums text-foreground">
                     £{flower.price.toFixed(2)}
                   </span>
@@ -105,13 +111,15 @@ export default function CheckoutPage() {
 
               {choc ? (
                 <div className="flex items-center justify-between">
-                  <span className="text-foreground/90">Chocolates ({choc.name})</span>
+                  <span className="font-display text-foreground/90">
+                    Chocolates ({choc.name})
+                  </span>
                   <span className="tabular-nums text-foreground">£{choc.price.toFixed(2)}</span>
                 </div>
               ) : null}
 
               <div className="pt-2 mt-2 border-t border-border flex items-center justify-between">
-                <span className="text-foreground font-medium">Total</span>
+                <span className="font-display text-foreground font-medium">Total</span>
                 <span className="tabular-nums text-foreground font-medium">
                   £{total.toFixed(2)}
                 </span>
@@ -123,14 +131,14 @@ export default function CheckoutPage() {
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
+              className="flex-1 font-display"
               onClick={() => history.back()}
             >
               Back
             </Button>
             <Button
               type="button"
-              className="flex-1"
+              className="flex-1 font-display"
               onClick={() => alert("Order placed (demo).")}
               disabled={!cardNumber || !expiry || !cvc}
             >

@@ -42,10 +42,20 @@ import condolenceSimpleScript from "@/assets/templates/condolence-simple-script.
 import condolenceWildflowers from "@/assets/templates/condolence-wildflowers.jpg";
 import condolenceSympathyBorder from "@/assets/templates/condolence-sympathy-border.jpg";
 
+// Birthday templates (AI-generated photo backgrounds with empty photo windows)
+import bdConfettiPhotoRect from "@/assets/templates/bd-confetti-photo-rect.png";
+import bdBalloonsPhotoOval from "@/assets/templates/bd-balloons-photo-oval.png";
+import bdFloralArchPhoto from "@/assets/templates/bd-floral-arch-photo.png";
+import bdMinimalPhotoRect from "@/assets/templates/bd-minimal-photo-rect.png";
+import bdSparklePhotoOval from "@/assets/templates/bd-sparkle-photo-oval.png";
+import bdTextTopConfetti from "@/assets/templates/bd-text-top-confetti.png";
+import bdTextBottomFlorals from "@/assets/templates/bd-text-bottom-florals.png";
+
 export type OccasionSlug =
   | "mothers-day"
   | "easter"
   | "fathers-day"
+  | "birthdays"
   | "weddings"
   | "new-baby"
   | "condolences";
@@ -168,7 +178,9 @@ export const OCCASIONS: Occasion[] = [
           "Clean grid of illustrated eggs in pastel tones, with a simple “Happy Easter” headline.",
         primaryStyle: "minimal",
         secondaryStyles: ["cute"],
-        imageUrl: easterPastelEggs,
+        // Updated upfront preview artwork (keep template id the same).
+        // Served via dev middleware at `/easter2/...`.
+        imageUrl: "/easter2/easter-pastel-eggs-grid-f08c4645-de1d-449c-869d-be9ce58d7a68.png",
         tags: ["pastel", "minimal", "modern"],
         layoutType: "text-only",
       },
@@ -281,6 +293,73 @@ export const OCCASIONS: Occasion[] = [
         secondaryStyles: [],
         imageUrl: fdGolfEnthusiast,
         tags: ["funny", "hobby"],
+        layoutType: "text-only",
+      },
+    ],
+  },
+  {
+    slug: "birthdays",
+    name: "Birthdays",
+    heroTitle: "Birthday Card Templates",
+    heroSubtitle:
+      "Bright, playful birthday designs with room for a custom photo and a personal message.",
+    heroImageUrl: bdConfettiPhotoRect,
+    highlightText:
+      "Pick a design, upload a photo for the front (for some cards), and make it uniquely theirs.",
+    templates: [
+      {
+        id: "bd-confetti-photo-rect",
+        name: "Confetti Photo Frame",
+        shortDescription:
+          "Bright confetti energy with a clean framed photo area for your birthday moment.",
+        primaryStyle: "photo-upload",
+        secondaryStyles: ["cute"],
+        imageUrl: bdConfettiPhotoRect,
+        tags: ["photo upload", "confetti", "party"],
+        layoutType: "single-photo-rect",
+      },
+      {
+        id: "bd-balloons-photo-oval",
+        name: "Balloon Photo Oval",
+        shortDescription:
+          "A cheerful oval photo window surrounded by balloons and birthday sparkle.",
+        primaryStyle: "photo-upload",
+        secondaryStyles: ["cute", "elegant"],
+        imageUrl: bdBalloonsPhotoOval,
+        tags: ["photo upload", "balloons", "portrait"],
+        layoutType: "single-photo-oval",
+      },
+      {
+        id: "bd-floral-arch-photo",
+        name: "Floral Arch Photo",
+        shortDescription:
+          "An elegant floral arch with a clean inside photo area for a personal birthday message.",
+        primaryStyle: "photo-upload",
+        secondaryStyles: ["floral", "elegant"],
+        imageUrl: bdFloralArchPhoto,
+        tags: ["photo upload", "floral", "arch"],
+        layoutType: "single-photo-arch",
+      },
+      {
+        id: "bd-text-top-confetti",
+        name: "Happy Birthday Confetti Text",
+        shortDescription:
+          "Text-forward birthday design with a blank central space for your message.",
+        primaryStyle: "minimal",
+        secondaryStyles: ["cute"],
+        imageUrl: bdTextTopConfetti,
+        tags: ["text-only", "confetti", "birthday"],
+        layoutType: "text-only",
+      },
+      {
+        id: "bd-text-bottom-florals",
+        name: "Birthday Ribbon Florals",
+        shortDescription:
+          "Elegant floral ribbon design with room for your custom birthday words.",
+        primaryStyle: "elegant",
+        secondaryStyles: ["floral"],
+        imageUrl: bdTextBottomFlorals,
+        tags: ["text-only", "florals", "birthday"],
         layoutType: "text-only",
       },
     ],

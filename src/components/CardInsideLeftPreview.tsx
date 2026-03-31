@@ -6,8 +6,10 @@ interface CardInsideLeftPreviewProps {
   photo1Url?: string | null;
   photo2Url?: string | null;
   photo3Url?: string | null;
-  /** Panel background (default warm cream). */
+  /** Panel background (default soft lilac). */
   backgroundColor?: string;
+  /** When set, empty-slot labels/icons use this (e.g. Bunny Photo Frame). */
+  insideLeftTextColor?: string;
   className?: string;
 }
 
@@ -19,7 +21,8 @@ export default function CardInsideLeftPreview({
   photo1Url,
   photo2Url,
   photo3Url,
-  backgroundColor = "#F6F0E0",
+  backgroundColor = "#FAEEF9",
+  insideLeftTextColor,
   className,
 }: CardInsideLeftPreviewProps) {
   const renderPhotoSlot = (
@@ -49,15 +52,25 @@ export default function CardInsideLeftPreview({
     return (
       <div
         className={cn(
-          "h-full w-full flex flex-col items-center justify-center text-muted-foreground text-center",
-          gapClass
+          "h-full w-full flex flex-col items-center justify-center text-center",
+          gapClass,
+          !insideLeftTextColor && "text-muted-foreground"
         )}
+        style={insideLeftTextColor ? { color: insideLeftTextColor } : undefined}
       >
         <div
           className={cn(
-            "rounded-full border-muted-foreground/70 flex items-center justify-center",
-            iconWrapClass
+            "rounded-full flex items-center justify-center",
+            iconWrapClass,
+            !insideLeftTextColor && "border-muted-foreground/70"
           )}
+          style={
+            insideLeftTextColor
+              ? {
+                  borderColor: `color-mix(in srgb, ${insideLeftTextColor} 72%, transparent)`,
+                }
+              : undefined
+          }
         >
           <Plus className={iconClass} />
         </div>
@@ -78,18 +91,30 @@ export default function CardInsideLeftPreview({
       }}
     >
       {/* Collage-style photo layout */}
-      <div className="absolute inset-0">
+      <div
+        className="absolute inset-0"
+        style={{
+          color: insideLeftTextColor ?? "rgba(253, 250, 244, 1)",
+          left: 1,
+        }}
+      >
         {/* Top-left */}
         <div
-          className="absolute h-[24%] w-[24%] overflow-hidden border-2 border-dashed border-primary/40 bg-transparent"
-          style={{ transform: "rotate(-18deg)", left: 23, top: 18 }}
+          className={cn(
+            "absolute h-[24%] w-[24%] overflow-hidden bg-transparent",
+            !photo1Url && "border-2 border-dashed border-primary/40"
+          )}
+          style={{ transform: "rotate(-18deg)", left: "11.14%", top: "3.75%" }}
         >
           {renderPhotoSlot(photo1Url, "Add Photo", "sm")}
         </div>
 
         {/* Center */}
         <div
-          className="absolute left-1/2 top-1/2 h-[38%] w-[52%] -translate-x-1/2 -translate-y-1/2 overflow-hidden border-2 border-dashed border-primary/40 bg-transparent"
+          className={cn(
+            "absolute left-1/2 top-1/2 h-[38%] w-[52%] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-transparent",
+            !photo2Url && "border-2 border-dashed border-primary/40"
+          )}
           style={{ zIndex: 1 }}
         >
           {renderPhotoSlot(photo2Url, "Add Photo")}
@@ -97,8 +122,11 @@ export default function CardInsideLeftPreview({
 
         {/* Bottom-right */}
         <div
-          className="absolute h-[24%] w-[24%] overflow-hidden border-2 border-dashed border-primary/40 bg-transparent"
-          style={{ transform: "rotate(18deg)", right: 18, bottom: 18, zIndex: 0 }}
+          className={cn(
+            "absolute h-[24%] w-[24%] overflow-hidden bg-transparent",
+            !photo3Url && "border-2 border-dashed border-primary/40"
+          )}
+          style={{ transform: "rotate(18deg)", left: "61.36%", top: "71.55%", zIndex: 0 }}
         >
           {renderPhotoSlot(photo3Url, "Add Photo", "sm")}
         </div>

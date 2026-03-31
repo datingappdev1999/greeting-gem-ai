@@ -5,13 +5,10 @@ interface CardInsideRightPreviewProps {
   topText?: string;
   middleText?: string;
   bottomText?: string;
-  /** Panel background (default warm cream). */
+  /** Panel background (default soft lilac). */
   backgroundColor?: string;
-  /** Color and size; inside-right copy always uses Dancing Script on the card. */
-  textStyle?: Pick<TextStyle, "fontFamily" | "color"> & {
-    /** CSS font-size string (e.g. "24px" or "clamp(...)") */
-    fontSize?: string;
-  };
+  /** Only `color` is respected for inside-right copy. */
+  textStyle?: Pick<TextStyle, "color">;
   className?: string;
 }
 
@@ -23,31 +20,41 @@ export default function CardInsideRightPreview({
   topText,
   middleText,
   bottomText,
-  backgroundColor = "#F6F0E0",
+  backgroundColor = "#FAEEF9",
   textStyle,
   className,
 }: CardInsideRightPreviewProps) {
-  const color = textStyle?.color ?? "#B08A2B";
-  const fontSize = textStyle?.fontSize ?? "clamp(23px, 2.6vw, 24px)";
-  /** Inside spread message slots always render in Dancing Script on the physical card. */
+  const color = textStyle?.color ?? "#5c4d6b";
+  const fontSize = "30px";
   const cardFont = "'Dancing Script', cursive";
 
-  const renderBox = (value: string | undefined, placeholder: string) => {
+  const placeholderStyle = {
+    color: `color-mix(in srgb, ${color} 50%, transparent)`,
+  } as const;
+
+  const renderBox = (
+    value: string | undefined,
+    placeholder: string,
+    options?: { opacity?: number }
+  ) => {
     const text = value?.trim() ?? "";
     return (
       <p
         className="whitespace-pre-wrap break-words text-center"
         style={{
+          marginTop: 0,
+          marginBottom: 0,
           fontFamily: cardFont,
           color,
           fontSize,
           lineHeight: 1.15,
+          ...(options?.opacity != null ? { opacity: options.opacity } : {}),
         }}
       >
         {text.length > 0 ? (
           text
         ) : (
-          <span style={{ opacity: 0.45 }}>{placeholder}</span>
+          <span style={placeholderStyle}>{placeholder}</span>
         )}
       </p>
     );
@@ -64,9 +71,12 @@ export default function CardInsideRightPreview({
         background: backgroundColor,
       }}
     >
-      <div className="absolute inset-0 flex flex-col items-center justify-between px-[10%] py-[12%]">
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-between px-[10%] py-[12%]"
+        style={{ color: "rgba(253, 250, 245, 1)" }}
+      >
         <div className="w-full">{renderBox(topText, "Top")}</div>
-        <div className="w-full">{renderBox(middleText, "Middle")}</div>
+        <div className="w-full">{renderBox(middleText, "Middle", { opacity: 0.7 })}</div>
         <div className="w-full">{renderBox(bottomText, "Bottom")}</div>
       </div>
     </div>

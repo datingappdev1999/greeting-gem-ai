@@ -3,7 +3,7 @@ import logoUrl from "@/assets/velvet-postbox-logo.png";
 
 interface CardBackPreviewProps {
   backMessage?: string;
-  /** Panel background (default off-white). */
+  /** Panel background (default soft lilac). */
   backgroundColor?: string;
   className?: string;
 }
@@ -13,7 +13,7 @@ interface CardBackPreviewProps {
  */
 export default function CardBackPreview({
   backMessage,
-  backgroundColor = "#FCF9F4",
+  backgroundColor = "#FAEEF9",
   className,
 }: CardBackPreviewProps) {
   return (
@@ -27,7 +27,10 @@ export default function CardBackPreview({
         background: backgroundColor,
       }}
     >
-      <div className="absolute inset-0 flex items-center justify-center px-[14%] py-[18%] pb-[34%]">
+      <div
+        className="absolute inset-0 flex items-center justify-center px-[14%] py-[18%] pb-[34%]"
+        style={{ color: "rgba(253, 250, 245, 1)" }}
+      >
         <p
           className="text-center text-sm font-[inherit] leading-relaxed break-words whitespace-pre-wrap"
           style={{

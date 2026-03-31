@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import CardEditorPanel from "@/components/CardEditorPanel";
 import CardTemplateRenderer from "@/components/CardTemplateRenderer";
 import type { CardTemplateConfig, CardUserContent } from "@/types/cardTemplate";
+import { templateHidesFrontHeadline } from "@/lib/cardTemplateFlags";
 import { cn } from "@/lib/utils";
 
 export interface FullscreenLegacyCardEditorProps {
@@ -86,6 +87,7 @@ export default function FullscreenLegacyCardEditor({
             userContent={userContent}
             onUserContentChange={onUserContentChange}
             headlinePlaceholder={headlinePlaceholder}
+            hideFrontHeadline={templateHidesFrontHeadline(template.id)}
           />
         </div>
         </div>

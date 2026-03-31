@@ -11,7 +11,32 @@ import type {
 import type { CardPreviewConfig, PhotoSlotConfig } from "@/types/cardPreview";
 import { getCardPreviewConfig } from "@/templates";
 import { fontWeightToCss } from "@/lib/cardFontWeight";
+import { templateHidesFrontHeadline } from "@/lib/cardTemplateFlags";
 import { cn } from "@/lib/utils";
+
+/** Bunny Photo Frame front headline: yellow fill, dark yellow outer ring, light yellow inner ring. */
+const BUNNY_HEADLINE_FILL = "#FFD700";
+const BUNNY_HEADLINE_OUTLINE_DARK = "#A67C00";
+const BUNNY_HEADLINE_OUTLINE_LIGHT = "#FFF9C4";
+
+function bunnyHeadlineTextShadow(): string {
+  const ring = (px: number, color: string) =>
+    [
+      `${-px}px ${-px}px 0 ${color}`,
+      `${-px}px 0 0 ${color}`,
+      `${-px}px ${px}px 0 ${color}`,
+      `0 ${-px}px 0 ${color}`,
+      `0 ${px}px 0 ${color}`,
+      `${px}px ${-px}px 0 ${color}`,
+      `${px}px 0 0 ${color}`,
+      `${px}px ${px}px 0 ${color}`,
+    ];
+  return [
+    ...ring(3, BUNNY_HEADLINE_OUTLINE_DARK),
+    ...ring(1, BUNNY_HEADLINE_OUTLINE_LIGHT),
+    "0 4px 8px rgba(0,0,0,0.12)",
+  ].join(", ");
+}
 
 interface CardTemplateRendererProps {
   template: CardTemplateConfig;
@@ -300,7 +325,7 @@ function renderElement(
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }),
-            color: "rgba(247, 240, 224, 1)",
+            color: "rgba(250, 238, 249, 1)",
           }}
           className="overflow-hidden rounded-2xl"
         >
@@ -327,13 +352,63 @@ function renderElement(
           : userContent.photoUrl;
 
       const shapeClass = getFrameShapeClasses(frame.frameShape);
-      return renderPhotoFrame(
-        frame,
-        placement,
-        shapeClass,
-        photoUrlForSlot,
-        el.zIndex
-      );
+      if (templateId === "easter-bunny-photo-frame" && frame.id === "photo") {
+        const hasPhoto = !!photoUrlForSlot;
+        return (
+          <div
+            key={el.id}
+            style={{
+              position: "absolute",
+              left: placement.left,
+              top: placement.top,
+              width: placement.width,
+              height: placement.height,
+              transform: placement.transform,
+              zIndex: el.zIndex,
+              boxSizing: "content-box",
+              overflow: "visible",
+            }}
+            className={cn(
+              shapeClass,
+              hasPhoto
+                ? "bg-transparent"
+                : "grid place-items-center border border-dashed border-black/15 bg-transparent"
+            )}
+          >
+            {hasPhoto ? (
+              <div
+                className={cn("overflow-hidden", shapeClass)}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={photoUrlForSlot}
+                  alt=""
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    display: "block",
+                  }}
+                />
+              </div>
+            ) : (
+              <span className="text-xs font-medium text-black/35 pointer-events-none">
+                {frame.placeholderLabel ?? "Add photo"}
+              </span>
+            )}
+          </div>
+        );
+      }
+
+      return renderPhotoFrame(frame, placement, shapeClass, photoUrlForSlot, el.zIndex);
     }
 
     case "decorative": {
@@ -362,6 +437,9 @@ function renderElement(
     case "body": {
       const textEl = el as TextElement;
       const key = textEl.defaultTextKey;
+      if (templateHidesFrontHeadline(templateId) && key === "headline") {
+        return null;
+      }
       const value =
         key === "headline"
           ? userContent.headline
@@ -395,7 +473,8 @@ function renderElement(
             <span
               className="block w-full max-w-full"
               style={{
-                fontSize: `${style.fontSize}rem`,
+                fontSize:
+                  key === "headline" ? "50px" : `${style.fontSize}rem`,
                 lineHeight: 1.25,
                 display: "-webkit-box",
                 WebkitBoxOrient: "vertical",
@@ -409,44 +488,106 @@ function renderElement(
         );
       }
 
+      const isSpringFloralsHeadline =
+        templateId === "easter-spring-florals" && key === "headline";
+
+      const headlineInnerLayout: React.CSSProperties = isSpringFloralsHeadline
+        ? {}
+        : {
+            display: "grid",
+            placeItems: "center",
+          };
+
       return (
         <div
           key={el.id}
           style={{
             ...baseStyle,
+            ...(templateId === "easter-bunny-photo-frame" && key === "headline"
+              ? {
+                  left: "12.27%",
+                  top: "80.92%",
+                  width: "68.18%",
+                  height: "10.22%",
+                  transform: undefined,
+                }
+              : null),
+            ...(isSpringFloralsHeadline
+              ? {
+                  left: "-0.91%",
+                  top: "74.62%",
+                  width: "88%",
+                  height: "16%",
+                  transform: undefined,
+                }
+              : null),
             fontFamily: style.fontFamily,
             fontWeight: fontWeightToCss(style.fontWeight),
             color: style.color,
             textAlign: style.align,
+            ...headlineInnerLayout,
+            whiteSpace: isSpringFloralsHeadline ? "normal" : "nowrap",
+            overflow: "visible",
+            boxSizing: "content-box",
+            backgroundSize: "none",
+            height:
+              templateId === "easter-bunny-photo-frame" && key === "headline"
+                ? "10.22%"
+                : isSpringFloralsHeadline
+                  ? "auto"
+                  : "26px",
+            paddingTop:
+              key === "headline"
+                ? templateId === "easter-bunny-photo-frame"
+                  ? "0px"
+                  : isSpringFloralsHeadline
+                    ? "0px"
+                    : headlineVerticalPadding
+                : `${verticalPaddingPx}px`,
+            paddingBottom:
+              key === "headline"
+                ? templateId === "easter-bunny-photo-frame"
+                  ? "0px"
+                  : isSpringFloralsHeadline
+                    ? "0px"
+                    : headlineVerticalPadding
+                : `${verticalPaddingPx}px`,
+            fontSize:
+              key === "headline"
+                ? templateId === "easter-bunny-photo-frame"
+                  ? "50px"
+                  : isSpringFloralsHeadline
+                    ? "50px"
+                    : headlineFontSize
+                : `${style.fontSize}rem`,
+            ...(isSpringFloralsHeadline
+              ? {
+                  color: "rgba(213, 173, 63, 1)",
+                  width: "100%",
+                  textAlign: "center",
+                  lineHeight: 1.2,
+                  textShadow:
+                    "0 0 12px rgba(248, 244, 234, 0.95), 0 1px 2px rgba(248, 244, 234, 0.9)",
+                }
+              : null),
+            ...(templateId === "easter-bunny-photo-frame" && key === "headline"
+              ? {
+                  width: "68.18%",
+                  paddingLeft: "2.27%",
+                  paddingRight: "2.27%",
+                  color: BUNNY_HEADLINE_FILL,
+                  textShadow: bunnyHeadlineTextShadow(),
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                }
+              : null),
           }}
-          className="leading-tight drop-shadow-sm break-words"
+          className={cn(
+            "leading-tight drop-shadow-sm break-words",
+            isSpringFloralsHeadline && "flex flex-row flex-wrap justify-center items-center"
+          )}
         >
-          <span
-            className="block w-full max-w-full"
-            style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              justifyContent: "center",
-              alignItems: "center",
-              whiteSpace: "nowrap",
-              overflow: "visible",
-              boxSizing: "content-box",
-              backgroundSize: "none",
-              height: "26px",
-              paddingTop:
-                key === "headline"
-                  ? headlineVerticalPadding
-                  : `${verticalPaddingPx}px`,
-              paddingBottom:
-                key === "headline"
-                  ? headlineVerticalPadding
-                  : `${verticalPaddingPx}px`,
-              fontSize:
-                key === "headline" ? headlineFontSize : `${style.fontSize}rem`,
-            }}
-          >
-            {value || " "}
-          </span>
+          {value || " "}
         </div>
       );
     }

@@ -52,6 +52,70 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
     return createEasterPastelEggsGridConfig(id, name, imageUrl);
   }
 
+  // Easter Bunny Photo Frame: match the playful handwritten “Happy Easter” headline styling.
+  if (id === "easter-bunny-photo-frame") {
+    const base = createRectPhotoFrameConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) => {
+        if (el.type === "imageFrame" && el.id === "photo") {
+          return {
+            ...el,
+            // Tweaked to visually match the desired placement from the editor inspector.
+            // Using % keeps it responsive across preview sizes.
+            // ~53px / 92px / 169px / 195px at ~275×367 preview (3:4 card).
+            position: { x: 19, y: 25 },
+            size: { width: 62, height: 53 },
+          };
+        }
+        if (el.type !== "headline") return el;
+        return {
+          ...el,
+          style: {
+            ...el.style,
+            fontFamily: "'Fredoka', var(--font-body), sans-serif",
+            // 1.875rem @ 16px root ≈ 30px (matches inspector target).
+            fontSize: 1.875,
+            fontWeight: "bold",
+            // Yellow fill; dark + light rings in CardTemplateRenderer.
+            color: "#FFD700",
+          },
+        };
+      }),
+    };
+  }
+
+  // Easter Spring Florals: full-bleed art + headline in lower cream band (percent-based, scales with card).
+  if (id === "easter-spring-florals") {
+    const base = createTextOnlyConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) => {
+        if (el.type === "background") {
+          return {
+            ...el,
+            fill: "#FCF9F4",
+            assetOpacity: 1,
+          };
+        }
+        if (el.type !== "headline") return el;
+        return {
+          ...el,
+          position: { x: "center", y: 80 },
+          size: { width: 88, height: 16 },
+          style: {
+            ...el.style,
+            fontFamily: "'Great Vibes', 'Dancing Script', cursive",
+            fontWeight: "normal",
+            color: "rgba(213, 173, 63, 1)",
+            align: "center",
+            lineClamp: 3,
+          },
+        };
+      }),
+    };
+  }
+
   switch (layoutType) {
     case "single-photo-oval":
       return createOvalPhotoFrameConfig(id, name, imageUrl);

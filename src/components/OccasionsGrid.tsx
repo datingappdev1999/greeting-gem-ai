@@ -6,12 +6,18 @@ const slugToStyles: Record<string, { color: string; accent: string }> = {
   "mothers-day": { color: "bg-coral-light", accent: "text-coral" },
   easter: { color: "bg-lavender-light", accent: "text-lavender" },
   "fathers-day": { color: "bg-sky-light", accent: "text-sky" },
+  birthdays: { color: "bg-rose-light", accent: "text-rose" },
   weddings: { color: "bg-gold-light", accent: "text-gold" },
   "new-baby": { color: "bg-sage-light", accent: "text-sage" },
   condolences: { color: "bg-rose-light", accent: "text-rose" },
 };
 
 const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => void }) => {
+  const visibleOccasionsOrder = ["easter", "fathers-day", "birthdays"] as const;
+  const visibleOccasions = visibleOccasionsOrder
+    .map((slug) => OCCASIONS.find((o) => o.slug === slug))
+    .filter((o): o is (typeof OCCASIONS)[number] => Boolean(o));
+
   return (
     <section id="shop-by-occasion" className="py-16 md:py-24">
       <div className="container">
@@ -38,7 +44,7 @@ const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => 
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {OCCASIONS.map((occasion, i) => {
+          {visibleOccasions.map((occasion, i) => {
             const styles = slugToStyles[occasion.slug] ?? {
               color: "bg-muted",
               accent: "text-foreground",

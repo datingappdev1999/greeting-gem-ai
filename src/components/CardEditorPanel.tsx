@@ -25,6 +25,8 @@ interface CardEditorPanelProps {
    * Default / `"all"` shows front content plus inside left, inside right, and back messages.
    */
   editingPanel?: CardEditorPanelView;
+  /** When true, hides the front cover “Your message” field (label, textarea, helper text). */
+  hideFrontHeadline?: boolean;
   className?: string;
 }
 
@@ -48,6 +50,7 @@ export default function CardEditorPanel({
   headlinePlaceholder = "Your message",
   headlineInputClassName,
   editingPanel = "all",
+  hideFrontHeadline = false,
   className,
 }: CardEditorPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -116,7 +119,7 @@ export default function CardEditorPanel({
         </p>
       )}
 
-      {showHeadline && renderFrontFields && (
+      {showHeadline && renderFrontFields && !hideFrontHeadline && (
         <div>
           <label
             htmlFor="card-headline"
@@ -133,7 +136,7 @@ export default function CardEditorPanel({
             placeholder={headlinePlaceholder}
             rows={4}
             className={cn(
-              "resize-none rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground w-full",
+              "resize-none rounded-xl border-border bg-white text-foreground placeholder:text-muted-foreground w-full",
               headlineInputClassName
             )}
           />
@@ -341,7 +344,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Top"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
               />
             </div>
 
@@ -360,7 +363,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Middle"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
               />
             </div>
 
@@ -379,7 +382,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Bottom"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
               />
             </div>
           </div>
