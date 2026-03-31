@@ -102,7 +102,7 @@ export const CanvasCardPreview = forwardRef<CanvasCardPreviewHandle, CanvasCardP
       return () => {
         cancelled = true;
       };
-    }, [page, photoLoadKey]);
+    }, [page, photoLoadKey, photoUrlBySlotId]);
 
     useLayoutEffect(() => {
       const canvas = canvasRef.current;
@@ -119,7 +119,7 @@ export const CanvasCardPreview = forwardRef<CanvasCardPreviewHandle, CanvasCardP
         textBySlotId,
         photoBySlotId,
       });
-    }, [page, textBySlotId, bgReady, photoEpoch]);
+    }, [page, textBySlotId, photoUrlBySlotId, bgReady, photoEpoch]);
 
     return (
       <canvas

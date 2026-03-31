@@ -6,7 +6,13 @@ import CardInsideLeftPreview from "@/components/CardInsideLeftPreview";
 import CardBackPreview from "@/components/CardBackPreview";
 import { OCCASIONS, type TemplateCard } from "@/lib/occasionsData";
 import { getCardTemplateConfig } from "@/templates";
-import type { CardUserContent, TextStyle } from "@/types/cardTemplate";
+import type { CardUserContent } from "@/types/cardTemplate";
+
+declare global {
+  interface Window {
+    __GG_PRINT_READY?: boolean;
+  }
+}
 
 type PdfJobPayload = {
   templateId: string;
@@ -51,13 +57,6 @@ export default function PrintPage() {
     () => (templateCard ? getCardTemplateConfig(templateCard) : null),
     [templateCard]
   );
-  const frontHeadlineStyle = useMemo(() => {
-    if (!templateConfig) return null;
-    const el = templateConfig.elements.find((e) => e.type === "headline");
-    if (!el || el.type !== "headline") return null;
-    return el.style as TextStyle;
-  }, [templateConfig]);
-
   const isEasterPastelEggsGrid = templateCard?.id === "easter-pastel-eggs-grid";
   const isEasterBunnyPhotoFrame = templateCard?.id === "easter-bunny-photo-frame";
   const isEasterSpringFlorals = templateCard?.id === "easter-spring-florals";
@@ -91,13 +90,13 @@ export default function PrintPage() {
       color: "#5c4d6b",
       fontSize: "50px",
     };
-  }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid, frontHeadlineStyle]);
+  }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid]);
 
   useEffect(() => {
     // Let Playwright know the page is ready to print.
-    if ((window as any).__GG_PRINT_READY) return;
+    if (window.__GG_PRINT_READY) return;
     if (jobId && templateConfig && job) {
-      (window as any).__GG_PRINT_READY = true;
+      window.__GG_PRINT_READY = true;
     }
   }, [jobId, templateConfig, job]);
 

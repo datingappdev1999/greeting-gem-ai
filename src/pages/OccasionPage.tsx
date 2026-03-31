@@ -15,42 +15,7 @@ function getOccasion(slug: string | undefined): Occasion | undefined {
 
 function getEasterTemplate2Variant(tpl: TemplateCard, occasionSlug: string | undefined): TemplateCard {
   if (occasionSlug !== "easter") return tpl;
-
-  const variantByTemplateId: Record<
-    string,
-    { name: string; imageFile: string }
-  > = {
-    "easter-bunny-photo-frame": {
-      name: "Bunny Photo Frame 2",
-      imageFile: "easter-bunny-photo-frame2-36a2b51b-585d-4d6d-981e-3489a463587a.png",
-    },
-    "easter-spring-florals": {
-      name: "Spring Florals 2",
-      imageFile: "easter-spring-florals2-26d94433-151a-4ffe-9df7-b6a7731890c8.png",
-    },
-    "easter-minimal-cross": {
-      name: "Minimal Cross 2",
-      imageFile: "easter-minimal-cross2-b857f52d-2604-4277-b2ec-b003d2f6b8c0.png",
-    },
-    "easter-egg-hunt": {
-      name: "Egg Hunt Fun 2",
-      imageFile: "easter-egg-hunt2-175593a9-f9e0-4187-8020-58aac2f87ab3.png",
-    },
-    "easter-pastel-eggs-grid": {
-      name: "Pastel Eggs Grid",
-      imageFile: "Untitled_design__1_-0befcb71-6dc6-4e32-ae24-af76b3ce5e33.png",
-    },
-  };
-
-  const v = variantByTemplateId[tpl.id];
-  if (!v) return tpl;
-
-  return {
-    ...tpl,
-    name: v.name,
-    // Served by Vite dev middleware in `vite.config.ts`
-    imageUrl: `/easter2/${v.imageFile}`,
-  };
+  return tpl;
 }
 
 const OccasionPage = () => {

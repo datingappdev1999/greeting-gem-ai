@@ -12,11 +12,11 @@ import mdFunnyTechSupport from "@/assets/templates/md-funny-tech-support.jpg";
 import mdWatercolourBouquet from "@/assets/templates/md-watercolour-bouquet.jpg";
 const mdPhotoOvalFrame = "/templates/md-photo-oval-frame.png";
 // Easter templates
-import easterPastelEggs from "@/assets/templates/easter-pastel-eggs-grid.png";
-import easterBunnyFrame from "@/assets/templates/easter-bunny-photo-frame.jpg";
-import easterSpringFlorals from "@/assets/templates/easter-spring-florals.jpg";
-import easterMinimalCross from "@/assets/templates/easter-minimal-cross.jpg";
-import easterEggHunt from "@/assets/templates/easter-egg-hunt.jpg";
+import easterPastelEggs2 from "@/assets/templates/easter-pastel-eggs-grid2.png";
+import easterBunnyFrame2 from "@/assets/templates/easter-bunny-photo-frame2.png";
+import easterSpringFlorals2 from "@/assets/templates/easter-spring-florals2.png";
+import easterMinimalCross2 from "@/assets/templates/easter-minimal-cross2.png";
+import easterEggHunt2 from "@/assets/templates/easter-egg-hunt2.png";
 // Father's Day templates
 import fdBoldSuperDad from "@/assets/templates/fd-bold-super-dad.jpg";
 import fdGrillKing from "@/assets/templates/fd-grill-king.jpg";
@@ -180,7 +180,7 @@ export const OCCASIONS: Occasion[] = [
         secondaryStyles: ["cute"],
         // Updated upfront preview artwork (keep template id the same).
         // Served via dev middleware at `/easter2/...`.
-        imageUrl: "/easter2/easter-pastel-eggs-grid-f08c4645-de1d-449c-869d-be9ce58d7a68.png",
+        imageUrl: easterPastelEggs2,
         tags: ["pastel", "minimal", "modern"],
         layoutType: "text-only",
       },
@@ -191,7 +191,7 @@ export const OCCASIONS: Occasion[] = [
           "Single photo framed with illustrated bunny ears and spring flowers for kid-friendly designs.",
         primaryStyle: "photo-upload",
         secondaryStyles: ["cute", "floral"],
-        imageUrl: easterBunnyFrame,
+        imageUrl: easterBunnyFrame2,
         tags: ["photo upload", "kids"],
         layoutType: "single-photo-rect",
       },
@@ -202,7 +202,7 @@ export const OCCASIONS: Occasion[] = [
           "Watercolour daffodils and tulips with a gentle “Happy Easter” message.",
         primaryStyle: "floral",
         secondaryStyles: ["traditional"],
-        imageUrl: easterSpringFlorals,
+        imageUrl: easterSpringFlorals2,
         tags: ["spring", "elegant"],
         layoutType: "text-only",
       },
@@ -213,7 +213,7 @@ export const OCCASIONS: Occasion[] = [
           "Simple line-art cross with soft pastel background for a respectful design.",
         primaryStyle: "minimal",
         secondaryStyles: [],
-        imageUrl: easterMinimalCross,
+        imageUrl: easterMinimalCross2,
         tags: ["minimal", "faith"],
         layoutType: "text-only",
       },
@@ -224,7 +224,7 @@ export const OCCASIONS: Occasion[] = [
           "Playful illustrated scene of bunnies and hidden eggs for the whole family.",
         primaryStyle: "cute",
         secondaryStyles: ["funny"],
-        imageUrl: easterEggHunt,
+        imageUrl: easterEggHunt2,
         tags: ["kids", "playful"],
         layoutType: "text-only",
       },

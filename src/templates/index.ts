@@ -58,6 +58,13 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
     return {
       ...base,
       elements: base.elements.map((el) => {
+        if (el.type === "background") {
+          return {
+            ...el,
+            fill: "#FCF9F4",
+            assetOpacity: 1,
+          };
+        }
         if (el.type === "imageFrame" && el.id === "photo") {
           return {
             ...el,
@@ -113,6 +120,23 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
           },
         };
       }),
+    };
+  }
+
+  // Easter text-only templates should use full artwork, not faint overlays.
+  if (id === "easter-minimal-cross" || id === "easter-egg-hunt") {
+    const base = createTextOnlyConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) =>
+        el.type === "background"
+          ? {
+              ...el,
+              fill: "#FCF9F4",
+              assetOpacity: 1,
+            }
+          : el
+      ),
     };
   }
 

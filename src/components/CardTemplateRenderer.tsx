@@ -189,7 +189,7 @@ function ConfigDrivenPreview({
 }
 
 /** Resolve position/size to CSS (percent; "center" -> 50% with transform) */
-function usePlacement(
+function getPlacement(
   position: { x: number | "center"; y: number | "center" },
   size: { width: number; height: number }
 ) {
@@ -227,7 +227,7 @@ function getFrameShapeClasses(shape: FrameShape): string {
  */
 function renderPhotoFrame(
   el: ImageFrameElement,
-  placement: ReturnType<typeof usePlacement>,
+  placement: ReturnType<typeof getPlacement>,
   shapeClass: string,
   photoUrl: string | null,
   zIndex: number
@@ -292,7 +292,7 @@ function renderElement(
   templateId: string,
   options?: { disableBackgroundAssetOverlay?: boolean }
 ): React.ReactNode {
-  const placement = usePlacement(el.position, el.size);
+  const placement = getPlacement(el.position, el.size);
   const baseStyle: React.CSSProperties = {
     position: "absolute",
     left: placement.left,

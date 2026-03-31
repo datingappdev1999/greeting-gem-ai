@@ -106,7 +106,7 @@ const OccasionEditorPage = () => {
         photoUrls: Object.fromEntries(frameIds.map((id) => [id, prev.photoUrls?.[id] ?? null])),
       }));
     }
-  }, [templateConfig?.id]);
+  }, [templateConfig]);
 
   useEffect(() => {
     if (!useFixedTemplate) return;

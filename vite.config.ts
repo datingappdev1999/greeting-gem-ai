@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
+import type { Connect } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { randomUUID } from "node:crypto";
+import type { IncomingMessage } from "node:http";
 import { chromium } from "@playwright/test";
 
 // https://vitejs.dev/config/
@@ -33,7 +35,7 @@ export default defineConfig(({ mode }) => ({
           "assets"
         );
 
-        async function readJsonBody(req: any): Promise<any> {
+        async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
           return new Promise((resolve, reject) => {
             let data = "";
             req.on("data", (chunk: Buffer) => {
@@ -50,7 +52,7 @@ export default defineConfig(({ mode }) => ({
           });
         }
 
-        server.middlewares.use(async (req, res, next) => {
+        const middleware: Connect.NextHandleFunction = async (req, res, next) => {
           try {
             if (!req.url) return next();
 
@@ -111,11 +113,9 @@ export default defineConfig(({ mode }) => ({
                 await page.goto(`${baseUrl}/print?jobId=${encodeURIComponent(jobId)}`, {
                   waitUntil: "domcontentloaded",
                 });
-                await page.waitForFunction(
-                  () => (window as any).__GG_PRINT_READY === true,
-                  null,
-                  { timeout: 90_000 }
-                );
+                await page.waitForFunction(() => (window as Window & { __GG_PRINT_READY?: boolean }).__GG_PRINT_READY === true, null, {
+                  timeout: 90_000,
+                });
 
                 const pdfPath = path.resolve(pdfDir, `${jobId}.pdf`);
                 await page.pdf({
@@ -142,8 +142,8 @@ export default defineConfig(({ mode }) => ({
             }
 
             return next();
-          } catch (e: any) {
-            const rawMessage = e?.message ?? String(e);
+          } catch (e: unknown) {
+            const rawMessage = e instanceof Error ? e.message : String(e);
             const message = /Executable doesn't exist|playwright install/i.test(rawMessage)
               ? "Chromium is not installed for Playwright. Run: npx playwright install chromium"
               : rawMessage;
@@ -151,7 +151,8 @@ export default defineConfig(({ mode }) => ({
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify({ error: "pdf_backend_error", message }));
           }
-        });
+        };
+        server.middlewares.use(middleware);
       },
     },
   ].filter(Boolean),

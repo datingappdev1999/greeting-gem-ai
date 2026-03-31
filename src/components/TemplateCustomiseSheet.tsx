@@ -18,7 +18,7 @@ import CardInsideLeftPreview from "@/components/CardInsideLeftPreview";
 import CardBackPreview from "@/components/CardBackPreview";
 import { getCardTemplateConfig } from "@/templates";
 import { createDefaultUserContent } from "@/types/cardTemplate";
-import type { CardUserContent, TextStyle } from "@/types/cardTemplate";
+import type { CardUserContent } from "@/types/cardTemplate";
 import type { TemplateCard } from "@/lib/occasionsData";
 import { templateHidesFrontHeadline } from "@/lib/cardTemplateFlags";
 import { cn } from "@/lib/utils";
@@ -90,13 +90,6 @@ const TemplateCustomiseSheet = ({
     [template]
   );
 
-  const frontHeadlineStyle = useMemo(() => {
-    if (!templateConfig) return null;
-    const el = templateConfig.elements.find((e) => e.type === "headline");
-    if (!el || el.type !== "headline") return null;
-    return el.style as TextStyle;
-  }, [templateConfig]);
-
   const isEasterPastelEggsGrid = template?.id === "easter-pastel-eggs-grid";
   const isEasterBunnyPhotoFrame = template?.id === "easter-bunny-photo-frame";
   const isEasterSpringFlorals = template?.id === "easter-spring-florals";
@@ -134,7 +127,7 @@ const TemplateCustomiseSheet = ({
       color: "#5c4d6b",
       fontSize: "50px",
     };
-  }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid, frontHeadlineStyle]);
+  }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid]);
 
   useEffect(() => {
     if (open && template) {
