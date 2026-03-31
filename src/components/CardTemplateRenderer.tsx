@@ -44,6 +44,8 @@ interface CardTemplateRendererProps {
   className?: string;
   /** When true, do not render semi-transparent background texture overlays. */
   disableBackgroundAssetOverlay?: boolean;
+  /** Optional color override for all text elements in this render. */
+  forceTextColor?: string;
 }
 
 /**
@@ -290,7 +292,7 @@ function renderElement(
   el: CardElement,
   userContent: CardUserContent,
   templateId: string,
-  options?: { disableBackgroundAssetOverlay?: boolean }
+  options?: { disableBackgroundAssetOverlay?: boolean; forceTextColor?: string }
 ): React.ReactNode {
   const placement = getPlacement(el.position, el.size);
   const baseStyle: React.CSSProperties = {
@@ -463,9 +465,10 @@ function renderElement(
             key={el.id}
             style={{
               ...baseStyle,
+              ...(key === "headline" ? { height: "80px" } : null),
               fontFamily: style.fontFamily,
               fontWeight: fontWeightToCss(style.fontWeight),
-              color: style.color,
+              color: options?.forceTextColor ?? style.color,
               textAlign: style.align,
             }}
             className="leading-tight drop-shadow-sm break-words flex flex-col justify-center"
@@ -490,6 +493,8 @@ function renderElement(
 
       const isSpringFloralsHeadline =
         templateId === "easter-spring-florals" && key === "headline";
+      const isBunnyHeadline =
+        templateId === "easter-bunny-photo-frame" && key === "headline";
 
       const headlineInnerLayout: React.CSSProperties = isSpringFloralsHeadline
         ? {}
@@ -503,19 +508,19 @@ function renderElement(
           key={el.id}
           style={{
             ...baseStyle,
-            ...(templateId === "easter-bunny-photo-frame" && key === "headline"
+            ...(isBunnyHeadline
               ? {
-                  left: "12.27%",
-                  top: "80.92%",
-                  width: "68.18%",
+                  left: "-2px",
+                  top: "226px",
+                  width: "200px",
                   height: "10.22%",
                   transform: undefined,
                 }
               : null),
             ...(isSpringFloralsHeadline
               ? {
-                  left: "-0.91%",
-                  top: "74.62%",
+                  left: "101px",
+                  top: "223px",
                   width: "88%",
                   height: "16%",
                   transform: undefined,
@@ -523,22 +528,22 @@ function renderElement(
               : null),
             fontFamily: style.fontFamily,
             fontWeight: fontWeightToCss(style.fontWeight),
-            color: style.color,
+            color: options?.forceTextColor ?? style.color,
             textAlign: style.align,
             ...headlineInnerLayout,
-            whiteSpace: isSpringFloralsHeadline ? "normal" : "nowrap",
+            whiteSpace: isSpringFloralsHeadline || isBunnyHeadline ? "normal" : "nowrap",
             overflow: "visible",
             boxSizing: "content-box",
             backgroundSize: "none",
             height:
-              templateId === "easter-bunny-photo-frame" && key === "headline"
+              isBunnyHeadline
                 ? "10.22%"
                 : isSpringFloralsHeadline
                   ? "auto"
                   : "26px",
             paddingTop:
               key === "headline"
-                ? templateId === "easter-bunny-photo-frame"
+                ? isBunnyHeadline
                   ? "0px"
                   : isSpringFloralsHeadline
                     ? "0px"
@@ -546,7 +551,7 @@ function renderElement(
                 : `${verticalPaddingPx}px`,
             paddingBottom:
               key === "headline"
-                ? templateId === "easter-bunny-photo-frame"
+                ? isBunnyHeadline
                   ? "0px"
                   : isSpringFloralsHeadline
                     ? "0px"
@@ -554,7 +559,7 @@ function renderElement(
                 : `${verticalPaddingPx}px`,
             fontSize:
               key === "headline"
-                ? templateId === "easter-bunny-photo-frame"
+                ? isBunnyHeadline
                   ? "50px"
                   : isSpringFloralsHeadline
                     ? "50px"
@@ -562,7 +567,7 @@ function renderElement(
                 : `${style.fontSize}rem`,
             ...(isSpringFloralsHeadline
               ? {
-                  color: "rgba(213, 173, 63, 1)",
+                  color: options?.forceTextColor ?? "rgba(213, 173, 63, 1)",
                   width: "100%",
                   textAlign: "center",
                   lineHeight: 1.2,
@@ -570,15 +575,16 @@ function renderElement(
                     "0 0 12px rgba(248, 244, 234, 0.95), 0 1px 2px rgba(248, 244, 234, 0.9)",
                 }
               : null),
-            ...(templateId === "easter-bunny-photo-frame" && key === "headline"
+            ...(isBunnyHeadline
               ? {
-                  width: "68.18%",
+                  width: "200px",
                   paddingLeft: "2.27%",
                   paddingRight: "2.27%",
-                  color: BUNNY_HEADLINE_FILL,
+                  color: options?.forceTextColor ?? BUNNY_HEADLINE_FILL,
                   textShadow: bunnyHeadlineTextShadow(),
                   marginTop: "0px",
                   marginBottom: "0px",
+                  lineHeight: 1.1,
                 }
               : null),
           }}
@@ -602,6 +608,7 @@ export default function CardTemplateRenderer({
   userContent,
   className,
   disableBackgroundAssetOverlay,
+  forceTextColor,
 }: CardTemplateRendererProps) {
   const previewConfig = getCardPreviewConfig(template);
 
@@ -628,7 +635,10 @@ export default function CardTemplateRenderer({
       }}
     >
       {sorted.map((el) =>
-        renderElement(el, userContent, template.id, { disableBackgroundAssetOverlay })
+        renderElement(el, userContent, template.id, {
+          disableBackgroundAssetOverlay,
+          forceTextColor,
+        })
       )}
     </div>
   );

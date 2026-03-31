@@ -111,20 +111,20 @@ const TemplateCustomiseSheet = ({
     if (isEasterBunnyPhotoFrame) {
       return {
         fontFamily: "'Shadows Into Light', cursive",
-        color: "#EDC602",
+        color: "#000000",
         fontSize: "50px",
       };
     }
     if (isEasterPastelEggsGrid) {
       return {
         fontFamily: "'Shadows Into Light', cursive",
-        color: "#200548",
+        color: "#000000",
         fontSize: "50px",
       };
     }
     return {
       fontFamily: "'Shadows Into Light', cursive",
-      color: "#5c4d6b",
+      color: "#000000",
       fontSize: "50px",
     };
   }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid]);
@@ -358,6 +358,7 @@ const TemplateCustomiseSheet = ({
                                     template={templateConfig}
                                     userContent={userContent}
                                     disableBackgroundAssetOverlay
+                                    forceTextColor="#000000"
                                     className="h-full w-full"
                                   />
                                 </div>
@@ -380,11 +381,7 @@ const TemplateCustomiseSheet = ({
                                     photo2Url={userContent.photoUrls?.["inside-left-photo-2"] ?? null}
                                     photo3Url={userContent.photoUrls?.["inside-left-photo-3"] ?? null}
                                     backgroundColor={insidePanelsBackgroundColor}
-                                    insideLeftTextColor={
-                                      isEasterBunnyPhotoFrame || isEasterSpringFlorals
-                                        ? "#EDC602"
-                                        : undefined
-                                    }
+                                    insideLeftTextColor="#000000"
                                     className="h-full w-full border-0 shadow-none rounded-none"
                                   />
                                 </div>

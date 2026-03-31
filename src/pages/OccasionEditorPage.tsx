@@ -346,6 +346,7 @@ const OccasionEditorPage = () => {
                 <CardTemplateRenderer
                   template={templateConfig}
                   userContent={userContent}
+                  forceTextColor="#000000"
                   className="h-full w-full"
                 />
               </button>
