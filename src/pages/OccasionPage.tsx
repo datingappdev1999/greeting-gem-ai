@@ -5,8 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TemplateCustomiseSheet from "@/components/TemplateCustomiseSheet";
-import AIChatOverlay from "@/components/AIChatOverlay";
 import { OCCASIONS, type Occasion, type TemplateCard } from "@/lib/occasionsData";
+import birthdaysLandingImage from "@/assets/birthdays-landing.png";
 
 function getOccasion(slug: string | undefined): Occasion | undefined {
   if (!slug) return undefined;
@@ -14,7 +14,9 @@ function getOccasion(slug: string | undefined): Occasion | undefined {
 }
 
 function getEasterTemplate2Variant(tpl: TemplateCard, occasionSlug: string | undefined): TemplateCard {
-  if (occasionSlug !== "easter") return tpl;
+  if ((occasionSlug === "birthdays" || occasionSlug === "fathers-day") && tpl.previewImageUrl) {
+    return { ...tpl, imageUrl: tpl.previewImageUrl };
+  }
   return tpl;
 }
 
@@ -24,7 +26,6 @@ const OccasionPage = () => {
   const occasion = getOccasion(slug);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateCard | null>(null);
-  const [aiChatOpen, setAiChatOpen] = useState(false);
 
   const handleTemplateClick = (tpl: TemplateCard) => {
     setSelectedTemplate(getEasterTemplate2Variant(tpl, occasion?.slug));
@@ -109,17 +110,14 @@ const OccasionPage = () => {
                 {occasion.highlightText}
               </p>
             )}
-            <button
-              type="button"
-              onClick={() => setAiChatOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-            >
-              Generate with AI
-            </button>
           </div>
           <div className="overflow-hidden rounded-xl shadow-card">
             <img
-              src={occasion.heroImageUrl}
+              src={
+                occasion.slug === "birthdays"
+                  ? birthdaysLandingImage
+                  : occasion.heroImageUrl
+              }
               alt={occasion.name}
               className="w-full h-full object-cover aspect-[4/3]"
             />
@@ -200,11 +198,6 @@ const OccasionPage = () => {
         template={selectedTemplate}
         occasionName={occasion?.name ?? null}
         onContinue={handleContinue}
-      />
-      <AIChatOverlay
-        open={aiChatOpen}
-        onOpenChange={setAiChatOpen}
-        initialOccasion={occasion ? { slug: occasion.slug, name: occasion.name } : null}
       />
     </div>
   );

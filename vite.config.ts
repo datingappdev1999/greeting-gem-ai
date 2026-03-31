@@ -86,7 +86,7 @@ export default defineConfig(({ mode }) => ({
               const payload = await readJsonBody(req);
               const jobId = randomUUID();
               const jobsDir = path.resolve(__dirname, "generated/pdf-jobs");
-              const pdfDir = path.resolve(__dirname, "generated/pdfs");
+              const pdfDir = path.resolve(__dirname, "generated");
               await fs.mkdir(jobsDir, { recursive: true });
               await fs.mkdir(pdfDir, { recursive: true });
               await fs.writeFile(

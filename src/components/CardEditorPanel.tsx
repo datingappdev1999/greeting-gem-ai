@@ -344,7 +344,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Top"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-foreground placeholder:text-muted-foreground w-full"
               />
             </div>
 
@@ -363,7 +363,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Middle"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-foreground placeholder:text-muted-foreground w-full"
               />
             </div>
 
@@ -382,7 +382,7 @@ export default function CardEditorPanel({
                 }
                 placeholder="Bottom"
                 rows={2}
-                className="resize-none rounded-xl border-border bg-white text-black placeholder:text-muted-foreground w-full"
+                className="resize-none rounded-xl border-border bg-white text-foreground placeholder:text-muted-foreground w-full"
               />
             </div>
           </div>

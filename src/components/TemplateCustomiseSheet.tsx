@@ -67,6 +67,13 @@ const TemplateCustomiseSheet = ({
   const transitioningToChocolatesRef = useRef(false);
 
   const isSuperDad = template?.id === "fd-bold-super-dad";
+  const isGrillKing = template?.id === "fd-grill-king";
+  const isToolsAndTies = template?.id === "fd-tools-and-ties";
+  const isDadPhotoCollage = template?.id === "fd-photo-collage";
+  const isGolfEnthusiast = template?.id === "fd-golf-hobby";
+  const isBirthdayRibbonFlorals = template?.id === "bd-text-bottom-florals";
+  const isBirthdayTopConfetti = template?.id === "bd-text-top-confetti";
+  const isBirthdayTemplate = template?.id.startsWith("bd-") ?? false;
 
   const defaultGreeting = isSuperDad
     ? "SUPER DAD"
@@ -101,6 +108,20 @@ const TemplateCustomiseSheet = ({
    */
   const insidePanelsBackgroundColor = isEasterEggHunt
     ? "#E6E8BD"
+    : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+      ? "#F8F9F1"
+    : isBirthdayTemplate
+      ? "#FEF7E7"
+    : isSuperDad
+      ? "#EFEFE7"
+    : isGrillKing
+      ? "#F7F0D2"
+    : isToolsAndTies || isDadPhotoCollage
+      ? "#FBF6E9"
+    : isGolfEnthusiast
+      ? "#F2F8E0"
+    : isBirthdayRibbonFlorals
+      ? "#F8F9F1"
     : isEasterBunnyPhotoFrame
       ? "#E1EDED"
       : isEasterSpringFlorals
@@ -108,26 +129,57 @@ const TemplateCustomiseSheet = ({
         : undefined;
 
   const insideRightPreviewTextStyle = useMemo(() => {
+    if (isSuperDad) {
+      return {
+        fontFamily: "'DM Sans', sans-serif",
+        color: "#092B4E",
+        fontSize: "25px",
+      };
+    }
+    if (isBirthdayRibbonFlorals || isBirthdayTopConfetti) {
+      return {
+        color: "#886F46",
+      };
+    }
+    if (isBirthdayTemplate) {
+      return {
+        color: "#CD0317",
+      };
+    }
+    if (isGrillKing) {
+      return {
+        color: "#A22B11",
+      };
+    }
+    if (isToolsAndTies) {
+      return {
+        color: "#2A405E",
+      };
+    }
+    if (isDadPhotoCollage) {
+      return {
+        color: "#2A405E",
+      };
+    }
+    if (isGolfEnthusiast) {
+      return {
+        color: "#10100E",
+      };
+    }
     if (isEasterBunnyPhotoFrame) {
       return {
-        fontFamily: "'Shadows Into Light', cursive",
-        color: "#000000",
-        fontSize: "50px",
+        color: "#EDC602",
       };
     }
     if (isEasterPastelEggsGrid) {
       return {
-        fontFamily: "'Shadows Into Light', cursive",
-        color: "#000000",
-        fontSize: "50px",
+        color: "#200548",
       };
     }
     return {
-      fontFamily: "'Shadows Into Light', cursive",
-      color: "#000000",
-      fontSize: "50px",
+      color: "#5c4d6b",
     };
-  }, [isEasterBunnyPhotoFrame, isEasterPastelEggsGrid]);
+  }, [isSuperDad, isBirthdayRibbonFlorals, isBirthdayTopConfetti, isBirthdayTemplate, isGrillKing, isToolsAndTies, isDadPhotoCollage, isGolfEnthusiast, isEasterBunnyPhotoFrame, isEasterPastelEggsGrid]);
 
   useEffect(() => {
     if (open && template) {
@@ -210,8 +262,7 @@ const TemplateCustomiseSheet = ({
 
   const stepLabels: { key: EditorStep; label: string; number: number }[] = [
     { key: "design", label: "Customise Card", number: 1 },
-    { key: "addons", label: "Add a Gift", number: 2 },
-    { key: "review", label: "Review", number: 3 },
+    { key: "review", label: "Review", number: 2 },
   ];
 
   if (!template || !templateConfig) return null;
@@ -258,10 +309,6 @@ const TemplateCustomiseSheet = ({
                           setStep("design");
                           setIsFlowersModalOpen(false);
                           setIsChocolatesModalOpen(false);
-                        } else if (s.key === "addons") {
-                          setStep("addons");
-                          setIsChocolatesModalOpen(false);
-                          setIsFlowersModalOpen(true);
                         } else {
                           setStep("review");
                           setIsFlowersModalOpen(false);
@@ -299,7 +346,7 @@ const TemplateCustomiseSheet = ({
           <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
             <div className="container py-8">
               <AnimatePresence mode="wait">
-                {(step === "design" || step === "addons") && (
+                {step === "design" && (
                   <motion.div
                     key="design"
                     initial={{ opacity: 0, x: -20 }}
@@ -316,7 +363,7 @@ const TemplateCustomiseSheet = ({
                         onValueChange={(v) => setCardView(v as typeof cardView)}
                         className="w-full"
                       >
-                        <TabsList className="w-full mb-4 grid w-full grid-cols-2 sm:grid-cols-4 h-auto p-1 text-black [&_button[data-state=active]]:text-black">
+                        <TabsList className="w-full mb-4 grid w-full grid-cols-2 sm:grid-cols-4 h-auto p-1">
                           <TabsTrigger value="front" className="flex-1 text-xs sm:text-sm">
                             Front
                           </TabsTrigger>
@@ -358,7 +405,16 @@ const TemplateCustomiseSheet = ({
                                     template={templateConfig}
                                     userContent={userContent}
                                     disableBackgroundAssetOverlay
-                                    forceTextColor="#000000"
+                                    forceTextColor={
+                                      isGolfEnthusiast
+                                        ? "#10100E"
+                                        : isBirthdayRibbonFlorals ||
+                                            isBirthdayTopConfetti
+                                          ? "#886F46"
+                                        : isToolsAndTies || isDadPhotoCollage
+                                          ? "#2A405E"
+                                        : undefined
+                                    }
                                     className="h-full w-full"
                                   />
                                 </div>
@@ -381,7 +437,24 @@ const TemplateCustomiseSheet = ({
                                     photo2Url={userContent.photoUrls?.["inside-left-photo-2"] ?? null}
                                     photo3Url={userContent.photoUrls?.["inside-left-photo-3"] ?? null}
                                     backgroundColor={insidePanelsBackgroundColor}
-                                    insideLeftTextColor="#000000"
+                                    insideLeftTextColor={
+                                      isSuperDad
+                                        ? "#092B4E"
+                                        : isGrillKing
+                                          ? "#A22B11"
+                                        : isToolsAndTies
+                                          ? "#2A405E"
+                                        : isDadPhotoCollage
+                                          ? "#2A405E"
+                                        : isGolfEnthusiast
+                                          ? "#10100E"
+                                        : isBirthdayRibbonFlorals ||
+                                            isBirthdayTopConfetti
+                                          ? "#886F46"
+                                        : isEasterBunnyPhotoFrame || isEasterSpringFlorals
+                                        ? "#EDC602"
+                                        : undefined
+                                    }
                                     className="h-full w-full border-0 shadow-none rounded-none"
                                   />
                                 </div>
@@ -423,6 +496,22 @@ const TemplateCustomiseSheet = ({
                                   <CardBackPreview
                                     backMessage={userContent.backMessage}
                                     backgroundColor={insidePanelsBackgroundColor}
+                                    textColor={
+                                      isSuperDad
+                                        ? "#092B4E"
+                                        : isGrillKing
+                                          ? "#A22B11"
+                                          : isToolsAndTies
+                                            ? "#2A405E"
+                                            : isDadPhotoCollage
+                                            ? "#2A405E"
+                                              : isGolfEnthusiast
+                                                ? "#10100E"
+                                              : isBirthdayRibbonFlorals ||
+                                                  isBirthdayTopConfetti
+                                                ? "#886F46"
+                                            : undefined
+                                    }
                                     className="h-full w-full border-0 shadow-none rounded-none"
                                   />
                                 </div>
@@ -439,11 +528,6 @@ const TemplateCustomiseSheet = ({
                                   setUserContent((prev) => ({ ...prev, ...patch }))
                                 }
                                 headlinePlaceholder={defaultGreeting}
-                                headlineInputClassName={
-                                  template.id === "md-photo-oval-frame"
-                                    ? "text-black"
-                                    : undefined
-                                }
                                 editingPanel={cardView}
                                 hideFrontHeadline={templateHidesFrontHeadline(
                                   template.id
@@ -452,13 +536,14 @@ const TemplateCustomiseSheet = ({
                               <Button
                                 type="button"
                                 onClick={() => {
-                                  setStep("addons");
-                                  setIsFlowersModalOpen(true);
+                                  setStep("review");
+                                  setIsFlowersModalOpen(false);
+                                  setIsChocolatesModalOpen(false);
                                 }}
                                 size="lg"
                                 className="w-full font-display -mt-1"
                               >
-                                Continue to add gifts
+                                Continue
                                 <ChevronRight className="h-4 w-4 ml-2" />
                               </Button>
                             </div>
@@ -484,9 +569,9 @@ const TemplateCustomiseSheet = ({
                       selectedChocolateId={selectedChocolateId}
                       cardPrice={CARD_PRICE_GBP}
                       onBack={() => {
-                        setStep("addons");
+                        setStep("design");
                         setIsChocolatesModalOpen(false);
-                        setIsFlowersModalOpen(true);
+                        setIsFlowersModalOpen(false);
                       }}
                       onCheckout={handleProceedCheckout}
                       isGeneratingPdf={isGeneratingPdf}
@@ -686,90 +771,59 @@ function ReviewStepContent({
   onCheckout: () => void;
   isGeneratingPdf: boolean;
 }) {
+  const reviewTemplateConfig = getCardTemplateConfig(template);
   const flower = FLOWER_BOUQUETS.find((b) => b.id === selectedFlowerId);
   const chocolate = CHOCOLATE_OPTIONS.find((c) => c.id === selectedChocolateId);
   const total = cardPrice + (flower?.price ?? 0) + (chocolate?.price ?? 0);
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="w-full">
       <div className="space-y-6">
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex items-start gap-5">
-            <div className="w-24 h-32 rounded-lg overflow-hidden shrink-0 border border-border bg-muted">
-              <img
-                src={template.imageUrl}
-                alt=""
-                className="w-full h-full object-cover"
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h3 className="font-display text-xl text-foreground">Review your card</h3>
+            <p className="text-sm font-semibold text-foreground tabular-nums">£{total.toFixed(2)}</p>
+          </div>
+          <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2">
+            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+              <CardTemplateRenderer
+                template={reviewTemplateConfig}
+                userContent={userContent}
+                disableBackgroundAssetOverlay
+                className="h-full w-full"
               />
+              <p className="mt-2 text-sm text-muted-foreground text-center">Front</p>
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-display text-lg text-foreground">{template.name}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{template.shortDescription}</p>
-              <p className="text-sm font-semibold text-foreground mt-3 tabular-nums">
-                £{cardPrice.toFixed(2)}
-              </p>
+            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+              <CardInsideLeftPreview
+                insideLeftMessage={userContent.insideLeftMessage}
+                photo1Url={userContent.photoUrls?.["inside-left-photo-1"] ?? null}
+                photo2Url={userContent.photoUrls?.["inside-left-photo-2"] ?? null}
+                photo3Url={userContent.photoUrls?.["inside-left-photo-3"] ?? null}
+                className="h-full w-full"
+              />
+              <p className="mt-2 text-sm text-muted-foreground text-center">Inside Left</p>
+            </div>
+            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+              <CardInsideRightPreview
+                topText={userContent.insideRightTop}
+                middleText={userContent.insideRightMiddle}
+                bottomText={userContent.insideRightBottom}
+                className="h-full w-full"
+              />
+              <p className="mt-2 text-sm text-muted-foreground text-center">Inside Right</p>
+            </div>
+            <div className="w-[min(78vw,460px)] shrink-0 snap-start">
+              <CardBackPreview
+                backMessage={userContent.backMessage}
+                className="h-full w-full"
+              />
+              <p className="mt-2 text-sm text-muted-foreground text-center">Back</p>
             </div>
           </div>
         </div>
 
-        {(flower || chocolate) && (
-          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-            <h3 className="font-display text-lg text-foreground">Gifts</h3>
-            {flower && (
-              <div className="flex items-center justify-between gap-4 py-2 border-b border-border/60 last:border-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-border bg-muted">
-                    <img
-                      src={flower.imageUrl}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{flower.name}</p>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{flower.description}</p>
-                  </div>
-                </div>
-                <p className="text-sm font-semibold text-foreground shrink-0 tabular-nums">
-                  £{flower.price.toFixed(2)}
-                </p>
-              </div>
-            )}
-            {chocolate && (
-              <div className="flex items-center justify-between gap-4 py-2">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-border bg-muted">
-                    <img
-                      src={chocolate.imageUrl}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{chocolate.name}</p>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {chocolate.description}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm font-semibold text-foreground shrink-0 tabular-nums">
-                  £{chocolate.price.toFixed(2)}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-sm font-semibold text-foreground">Total</p>
-            <p className="text-sm font-semibold text-foreground tabular-nums">
-              £{total.toFixed(2)}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <Button
             type="button"
             variant="outline"
@@ -788,7 +842,7 @@ function ReviewStepContent({
             className="flex-1 font-display"
             disabled={isGeneratingPdf}
           >
-            {isGeneratingPdf ? "Preparing…" : "Proceed to checkout"}
+            {isGeneratingPdf ? "Preparing…" : "Checkout now"}
           </Button>
         </div>
       </div>

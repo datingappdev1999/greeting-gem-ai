@@ -104,8 +104,8 @@ export function createEasterPastelEggsGridConfig(
         id: "headline",
         type: "headline",
         zIndex: 2,
-        position: { x: "center", y: 74 },
-        size: { width: 88, height: 14 },
+        position: { x: "center", y: 72 },
+        size: { width: 88, height: 26 },
         style: {
           fontFamily: "'Dancing Script', cursive",
           fontSize: 50 / 16,

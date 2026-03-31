@@ -5,7 +5,7 @@ const props = [
   {
     icon: Sparkles,
     title: "AI Personalisation",
-    desc: "Our AI helps you write the perfect message for any occasion.",
+    desc: "Our AI will soon help you write the perfect message and design the perfect card for any occasion.",
   },
   {
     icon: Palette,
@@ -14,8 +14,8 @@ const props = [
   },
   {
     icon: Truck,
-    title: "Next-Day Delivery",
-    desc: "Order by 9pm and we'll have it on their doorstep tomorrow.",
+    title: "First Class Delivery",
+    desc: "Get it as soon as in one day (may take up to 3 days).",
   },
   {
     icon: Heart,

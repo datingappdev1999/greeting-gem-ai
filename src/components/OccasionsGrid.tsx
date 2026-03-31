@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { OCCASIONS } from "@/lib/occasionsData";
+import birthdaysLandingImage from "@/assets/birthdays-landing.png";
 
 const slugToStyles: Record<string, { color: string; accent: string }> = {
   "mothers-day": { color: "bg-coral-light", accent: "text-coral" },
@@ -12,7 +13,7 @@ const slugToStyles: Record<string, { color: string; accent: string }> = {
   condolences: { color: "bg-rose-light", accent: "text-rose" },
 };
 
-const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => void }) => {
+const OccasionsGrid = () => {
   const visibleOccasionsOrder = ["easter", "fathers-day", "birthdays"] as const;
   const visibleOccasions = visibleOccasionsOrder
     .map((slug) => OCCASIONS.find((o) => o.slug === slug))
@@ -34,13 +35,6 @@ const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => 
           <p className="text-muted-foreground max-w-md mx-auto">
             Find the perfect card for every life moment, personalised with AI to make it truly special.
           </p>
-          <button
-            type="button"
-            onClick={() => onOpenGenerateWithAI?.()}
-            className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
-          >
-            Generate with AI
-          </button>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
@@ -64,7 +58,11 @@ const OccasionsGrid = ({ onOpenGenerateWithAI }: { onOpenGenerateWithAI?: () => 
                 >
                   <div className="aspect-square overflow-hidden">
                     <img
-                      src={occasion.heroImageUrl}
+                      src={
+                        occasion.slug === "birthdays"
+                          ? birthdaysLandingImage
+                          : occasion.heroImageUrl
+                      }
                       alt={`${occasion.name} greeting cards`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

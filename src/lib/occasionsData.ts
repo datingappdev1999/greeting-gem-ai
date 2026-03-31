@@ -18,11 +18,11 @@ import easterSpringFlorals2 from "@/assets/templates/easter-spring-florals2.png"
 import easterMinimalCross2 from "@/assets/templates/easter-minimal-cross2.png";
 import easterEggHunt2 from "@/assets/templates/easter-egg-hunt2.png";
 // Father's Day templates
-import fdBoldSuperDad from "@/assets/templates/fd-bold-super-dad.jpg";
-import fdGrillKing from "@/assets/templates/fd-grill-king.jpg";
-import fdToolsAndTies from "@/assets/templates/fd-tools-and-ties.jpg";
-import fdPhotoCollage from "@/assets/templates/fd-photo-collage.jpg";
-import fdGolfEnthusiast from "@/assets/templates/fd-golf-enthusiast.jpg";
+import fdBoldSuperDad from "@/assets/templates/fd-bold-super-dad.png";
+import fdGrillKing from "@/assets/templates/fd-grill-king.png";
+import fdToolsAndTies from "@/assets/templates/fd-tools-and-ties.png";
+import fdPhotoCollage from "@/assets/templates/fd-Best-Dad.png";
+import fdGolfEnthusiast from "@/assets/templates/fd-golf-enthusiast.png";
 // Wedding templates
 import wedMinimalMonogram from "@/assets/templates/wed-minimal-monogram.jpg";
 import wedPhotoArchFloral from "@/assets/templates/wed-photo-arch-floral.jpg";
@@ -50,6 +50,11 @@ import bdMinimalPhotoRect from "@/assets/templates/bd-minimal-photo-rect.png";
 import bdSparklePhotoOval from "@/assets/templates/bd-sparkle-photo-oval.png";
 import bdTextTopConfetti from "@/assets/templates/bd-text-top-confetti.png";
 import bdTextBottomFlorals from "@/assets/templates/bd-text-bottom-florals.png";
+import bdConfettiPhotoRect2 from "@/assets/templates/bd-confetti-photo-rect2.png";
+import bdBalloonsPhotoOval2 from "@/assets/templates/bd-balloons-photo-oval2.png";
+import bdFloralArchPhoto2 from "@/assets/templates/bd-floral-arch-photo2.png";
+import bdSparklePhotoOval2 from "@/assets/templates/bd-sparkle-photo-oval2.png";
+import bdTextTopConfetti2 from "@/assets/templates/bd-text-top-confetti2.png";
 
 export type OccasionSlug =
   | "mothers-day"
@@ -80,6 +85,8 @@ export interface TemplateCard {
   primaryStyle: TemplateStyle;
   secondaryStyles?: TemplateStyle[];
   imageUrl: string;
+  /** Larger preview image shown in a lightbox when the user clicks the template card. */
+  previewImageUrl?: string;
   tags: string[];
   layoutType: LayoutType;
 }
@@ -243,55 +250,55 @@ export const OCCASIONS: Occasion[] = [
       {
         id: "fd-bold-super-dad",
         name: "Bold Super Dad",
-        shortDescription:
-          "Strong sans-serif “Super Dad” headline with geometric shapes and deep blue palette.",
+        shortDescription: "Strong sans-serif Super Dad headline with geometric shapes and deep blue palette.",
         primaryStyle: "bold-typography",
         secondaryStyles: ["minimal"],
         imageUrl: fdBoldSuperDad,
+        previewImageUrl: fdBoldSuperDad,
         tags: ["modern", "graphic"],
         layoutType: "text-only",
       },
       {
         id: "fd-grill-king",
         name: "Grill King",
-        shortDescription:
-          "Illustrated BBQ tools and flames with a tongue-in-cheek “Grill King” message.",
+        shortDescription: "Illustrated BBQ tools and flames with a tongue-in-cheek Grill King message.",
         primaryStyle: "funny",
         secondaryStyles: [],
         imageUrl: fdGrillKing,
+        previewImageUrl: fdGrillKing,
         tags: ["funny", "hobby", "bbq"],
         layoutType: "text-only",
       },
       {
         id: "fd-tools-and-ties",
         name: "Tools & Ties",
-        shortDescription:
-          "Classic illustrated tools and ties with a heartfelt “Best Dad” message.",
+        shortDescription: "Classic illustrated tools and ties with a heartfelt Best Dad message.",
         primaryStyle: "traditional",
         secondaryStyles: ["handwritten"],
         imageUrl: fdToolsAndTies,
+        previewImageUrl: fdToolsAndTies,
         tags: ["classic", "heartfelt"],
         layoutType: "text-only",
       },
       {
         id: "fd-photo-collage",
         name: "Dad Photo Collage",
-        shortDescription:
-          "Multi-photo layout with bold typography for a personalised tribute.",
+        shortDescription: "Multi-photo layout with bold typography for a personalised tribute.",
         primaryStyle: "photo-upload",
         secondaryStyles: ["bold-typography"],
         imageUrl: fdPhotoCollage,
+        previewImageUrl: fdPhotoCollage,
         tags: ["photo upload", "personal"],
         layoutType: "multi-photo",
       },
       {
         id: "fd-golf-hobby",
         name: "Golf Enthusiast",
-        shortDescription:
-          "Illustrated golf clubs and balls with a witty “Fore the Best Dad” pun.",
+        shortDescription: "Illustrated golf clubs and balls with a witty Fore the Best Dad pun.",
         primaryStyle: "funny",
         secondaryStyles: [],
         imageUrl: fdGolfEnthusiast,
+        previewImageUrl: fdGolfEnthusiast,
         tags: ["funny", "hobby"],
         layoutType: "text-only",
       },
@@ -315,6 +322,7 @@ export const OCCASIONS: Occasion[] = [
         primaryStyle: "photo-upload",
         secondaryStyles: ["cute"],
         imageUrl: bdConfettiPhotoRect,
+        previewImageUrl: bdConfettiPhotoRect2,
         tags: ["photo upload", "confetti", "party"],
         layoutType: "single-photo-rect",
       },
@@ -326,6 +334,7 @@ export const OCCASIONS: Occasion[] = [
         primaryStyle: "photo-upload",
         secondaryStyles: ["cute", "elegant"],
         imageUrl: bdBalloonsPhotoOval,
+        previewImageUrl: bdBalloonsPhotoOval2,
         tags: ["photo upload", "balloons", "portrait"],
         layoutType: "single-photo-oval",
       },
@@ -337,6 +346,7 @@ export const OCCASIONS: Occasion[] = [
         primaryStyle: "photo-upload",
         secondaryStyles: ["floral", "elegant"],
         imageUrl: bdFloralArchPhoto,
+        previewImageUrl: bdFloralArchPhoto2,
         tags: ["photo upload", "floral", "arch"],
         layoutType: "single-photo-arch",
       },
@@ -348,6 +358,7 @@ export const OCCASIONS: Occasion[] = [
         primaryStyle: "minimal",
         secondaryStyles: ["cute"],
         imageUrl: bdTextTopConfetti,
+        previewImageUrl: bdTextTopConfetti2,
         tags: ["text-only", "confetti", "birthday"],
         layoutType: "text-only",
       },
@@ -359,6 +370,7 @@ export const OCCASIONS: Occasion[] = [
         primaryStyle: "elegant",
         secondaryStyles: ["floral"],
         imageUrl: bdTextBottomFlorals,
+        previewImageUrl: bdTextBottomFlorals,
         tags: ["text-only", "florals", "birthday"],
         layoutType: "text-only",
       },

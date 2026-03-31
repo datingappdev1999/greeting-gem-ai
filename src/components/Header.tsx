@@ -1,4 +1,4 @@
-import { Heart, Search, ShoppingBag, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,10 +6,7 @@ import logo from "@/assets/velvet-postbox-logo.png";
 
 const navLinks: { label: string; to: string }[] = [
   { label: "Cards", to: "/#shop-by-occasion" },
-  { label: "Gifts", to: "/gifts/chocolates" },
-  { label: "Flowers", to: "/gifts/flowers" },
   { label: "Occasions", to: "/#shop-by-occasion" },
-  { label: "Create Your Own", to: "/?create=1" },
 ];
 
 const Header = () => {
@@ -22,7 +19,7 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Velvet Postbox" className="h-12 md:h-14 w-auto" />
+          <img src={logo} alt="Velvet Postbox" className="h-14 md:h-16 w-auto" />
         </Link>
 
         {/* Desktop Nav */}
@@ -38,20 +35,8 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Actions */}
+        {/* Actions (icon buttons hidden from frontend) */}
         <div className="flex items-center gap-3">
-          <button className="p-2 rounded-full hover:bg-secondary transition-colors">
-            <Search className="w-5 h-5 text-foreground" />
-          </button>
-          <button className="hidden md:flex p-2 rounded-full hover:bg-secondary transition-colors">
-            <Heart className="w-5 h-5 text-foreground" />
-          </button>
-          <button className="p-2 rounded-full hover:bg-secondary transition-colors relative">
-            <ShoppingBag className="w-5 h-5 text-foreground" />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
-              0
-            </span>
-          </button>
           <button
             className="md:hidden p-2 rounded-full hover:bg-secondary transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}

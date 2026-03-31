@@ -1,5 +1,5 @@
 import type { CardTemplate } from "@/types/cardTemplate";
-import fdToolsAndTies from "@/assets/templates/fd-tools-and-ties.jpg";
+import fdToolsAndTies from "@/assets/templates/fd-tools-and-ties.png";
 
 // Father's Day classic template:
 // - warm cream background

@@ -5,6 +5,8 @@ interface CardBackPreviewProps {
   backMessage?: string;
   /** Panel background (default soft lilac). */
   backgroundColor?: string;
+  /** Optional message color override. */
+  textColor?: string;
   className?: string;
 }
 
@@ -14,6 +16,7 @@ interface CardBackPreviewProps {
 export default function CardBackPreview({
   backMessage,
   backgroundColor = "#FAEEF9",
+  textColor,
   className,
 }: CardBackPreviewProps) {
   return (
@@ -34,7 +37,7 @@ export default function CardBackPreview({
         <p
           className="text-center text-sm font-[inherit] leading-relaxed break-words whitespace-pre-wrap"
           style={{
-            color: "hsl(var(--foreground) / 0.85)",
+            color: textColor ?? "hsl(var(--foreground) / 0.85)",
             fontFamily: "inherit",
           }}
         >

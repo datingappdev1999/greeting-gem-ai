@@ -354,6 +354,10 @@ function renderElement(
           : userContent.photoUrl;
 
       const shapeClass = getFrameShapeClasses(frame.frameShape);
+      const isBirthdayConfettiRectPhoto =
+        templateId === "bd-confetti-photo-rect" && frame.id === "photo";
+      const isBirthdayConfettiTextPhoto =
+        templateId === "bd-text-top-confetti" && frame.id === "photo";
       if (templateId === "easter-bunny-photo-frame" && frame.id === "photo") {
         const hasPhoto = !!photoUrlForSlot;
         return (
@@ -410,7 +414,13 @@ function renderElement(
         );
       }
 
-      return renderPhotoFrame(frame, placement, shapeClass, photoUrlForSlot, el.zIndex);
+      return renderPhotoFrame(
+        frame,
+        placement,
+        isBirthdayConfettiRectPhoto || isBirthdayConfettiTextPhoto ? "" : shapeClass,
+        photoUrlForSlot,
+        el.zIndex
+      );
     }
 
     case "decorative": {
@@ -439,6 +449,9 @@ function renderElement(
     case "body": {
       const textEl = el as TextElement;
       const key = textEl.defaultTextKey;
+      if (templateId === "fd-bold-super-dad" && key === "body") {
+        return null;
+      }
       if (templateHidesFrontHeadline(templateId) && key === "headline") {
         return null;
       }
@@ -465,7 +478,6 @@ function renderElement(
             key={el.id}
             style={{
               ...baseStyle,
-              ...(key === "headline" ? { height: "80px" } : null),
               fontFamily: style.fontFamily,
               fontWeight: fontWeightToCss(style.fontWeight),
               color: options?.forceTextColor ?? style.color,
@@ -510,20 +522,11 @@ function renderElement(
             ...baseStyle,
             ...(isBunnyHeadline
               ? {
-                  left: "-2px",
-                  top: "226px",
-                  width: "200px",
-                  height: "10.22%",
-                  transform: undefined,
-                }
-              : null),
-            ...(isSpringFloralsHeadline
-              ? {
-                  left: "101px",
-                  top: "223px",
-                  width: "88%",
-                  height: "16%",
-                  transform: undefined,
+                  left: "50%",
+                  top: "79%",
+                  width: "90%",
+                  height: "18%",
+                  transform: "translateX(-50%)",
                 }
               : null),
             fontFamily: style.fontFamily,
@@ -568,7 +571,7 @@ function renderElement(
             ...(isSpringFloralsHeadline
               ? {
                   color: options?.forceTextColor ?? "rgba(213, 173, 63, 1)",
-                  width: "100%",
+                  width: "88%",
                   textAlign: "center",
                   lineHeight: 1.2,
                   textShadow:
@@ -577,9 +580,9 @@ function renderElement(
               : null),
             ...(isBunnyHeadline
               ? {
-                  width: "200px",
-                  paddingLeft: "2.27%",
-                  paddingRight: "2.27%",
+                  width: "90%",
+                  paddingLeft: 0,
+                  paddingRight: 0,
                   color: options?.forceTextColor ?? BUNNY_HEADLINE_FILL,
                   textShadow: bunnyHeadlineTextShadow(),
                   marginTop: "0px",

@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
 
-interface HeroSectionProps {
-  onOpenGenerateWithAI?: () => void;
-}
-
-const HeroSection = ({ onOpenGenerateWithAI }: HeroSectionProps) => {
+const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Hero Image */}
@@ -37,20 +34,14 @@ const HeroSection = ({ onOpenGenerateWithAI }: HeroSectionProps) => {
                 Craft heartfelt, personalised greeting cards for every moment that matters. Powered by AI, made with love.
               </p>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="#occasions"
+                <Link
+                  to="/"
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity shadow-elevated"
                 >
                   Browse Cards
                   <ArrowRight className="w-4 h-4" />
-                </a>
-                <button
-                  type="button"
-                  onClick={() => onOpenGenerateWithAI?.()}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-card/20 backdrop-blur-sm text-primary-foreground font-medium text-sm border border-primary-foreground/20 hover:bg-card/30 transition-colors"
-                >
-                  Generate with AI
-                </button>
+                </Link>
               </div>
             </motion.div>
           </div>

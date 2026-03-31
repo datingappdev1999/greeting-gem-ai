@@ -77,7 +77,6 @@ export default function FullscreenLegacyCardEditor({
             <CardTemplateRenderer
               template={template}
               userContent={userContent}
-              forceTextColor="#000000"
               className="h-full w-full"
             />
           </div>

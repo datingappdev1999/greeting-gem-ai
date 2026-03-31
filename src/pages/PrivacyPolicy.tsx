@@ -5,9 +5,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const PrivacyPolicy = () => (
-  <div className="min-h-screen bg-background">
+  <div className="min-h-screen bg-background flex flex-col">
     <Header />
-    <main className="container py-10 md:py-16 max-w-3xl">
+    <main className="container py-10 md:py-16 max-w-3xl flex-1">
       <Link
         to="/"
         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm"

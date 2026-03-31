@@ -1,5 +1,10 @@
 import { cn } from "@/lib/utils";
-import type { TextStyle } from "@/types/cardTemplate";
+
+interface InsideRightTextStyle {
+  color?: string;
+  fontFamily?: string;
+  fontSize?: string | number;
+}
 
 interface CardInsideRightPreviewProps {
   topText?: string;
@@ -7,8 +12,8 @@ interface CardInsideRightPreviewProps {
   bottomText?: string;
   /** Panel background (default soft lilac). */
   backgroundColor?: string;
-  /** Only `color` is respected for inside-right copy. */
-  textStyle?: Pick<TextStyle, "color">;
+  /** Optional text style overrides for inside-right copy. */
+  textStyle?: InsideRightTextStyle;
   className?: string;
 }
 
@@ -25,8 +30,8 @@ export default function CardInsideRightPreview({
   className,
 }: CardInsideRightPreviewProps) {
   const color = textStyle?.color ?? "#5c4d6b";
-  const fontSize = "30px";
-  const cardFont = "'Dancing Script', cursive";
+  const fontSize = textStyle?.fontSize ?? "30px";
+  const cardFont = textStyle?.fontFamily ?? "'Dancing Script', cursive";
 
   const placeholderStyle = {
     color: `color-mix(in srgb, ${color} 50%, transparent)`,
@@ -76,7 +81,7 @@ export default function CardInsideRightPreview({
         style={{ color: "rgba(253, 250, 245, 1)" }}
       >
         <div className="w-full">{renderBox(topText, "Top")}</div>
-        <div className="w-full">{renderBox(middleText, "Middle", { opacity: 0.7 })}</div>
+        <div className="w-full">{renderBox(middleText, "Middle")}</div>
         <div className="w-full">{renderBox(bottomText, "Bottom")}</div>
       </div>
     </div>

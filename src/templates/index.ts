@@ -6,7 +6,6 @@ import { createOvalPhotoFrameConfig } from "./ovalPhotoFrame";
 import { createRectPhotoFrameConfig } from "./rectPhotoFrame";
 import { createArchPhotoFrameConfig } from "./archPhotoFrame";
 import { createEasterPastelEggsGridConfig, createTextOnlyConfig } from "./textOnly";
-import { fathersDaySuperDadTemplate } from "./fathersDaySuperDad";
 import {
   createMothersDayFloralCollageConfig,
   getMdFloralPreviewConfig,
@@ -37,11 +36,6 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
   const { id, name, imageUrl } = templateCard;
   const layoutType: LayoutType = templateCard.layoutType;
 
-  // Special structured template for the \"Super Dad\" card.
-  if (id === "fd-bold-super-dad") {
-    return fathersDaySuperDadTemplate;
-  }
-
   // Mother's Day Floral Photo Collage: full template image as background + 4 photo slots.
   if (id === "md-floral-photo-collage") {
     return createMothersDayFloralCollageConfig(templateCard.imageUrl);
@@ -70,7 +64,7 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
             ...el,
             // Tweaked to visually match the desired placement from the editor inspector.
             // Using % keeps it responsive across preview sizes.
-            // ~53px / 92px / 169px / 195px at ~275×367 preview (3:4 card).
+            // ~53px / 92px / 169px / 195px at ~275x367 preview (3:4 card).
             position: { x: 19, y: 25 },
             size: { width: 62, height: 53 },
           };
@@ -134,6 +128,85 @@ export function getCardTemplateConfig(templateCard: TemplateCard): CardTemplateC
               ...el,
               fill: "#FCF9F4",
               assetOpacity: 1,
+            }
+          : el
+      ),
+    };
+  }
+
+  // Birthday photo-upload templates: tighten photo slots to the central white windows.
+  if (id === "bd-confetti-photo-rect") {
+    const base = createRectPhotoFrameConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) =>
+        el.type === "imageFrame" && el.id === "photo"
+          ? {
+              ...el,
+              // Match requested inspector bounds on the current preview canvas.
+              // Source target: left=58, top=257, width=325, height=265 on ~438x585 canvas.
+              position: { x: 13.24, y: 43.93 },
+              size: { width: 74.2, height: 45.3 },
+            }
+          : el
+      ),
+    };
+  }
+
+  // Birthday Confetti Text: add a centered photo window over the white panel area.
+  if (id === "bd-text-top-confetti") {
+    const base = createTextOnlyConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: [
+        ...base.elements,
+        {
+          id: "photo",
+          type: "imageFrame",
+          zIndex: 1,
+          // Match requested inspector bounds on current preview (~438x585):
+          // left=40, top=189, width=357, height=252
+          position: { x: 9.13, y: 32.31 },
+          size: { width: 81.51, height: 43.08 },
+          frameShape: "rect",
+          borderWidth: 2,
+          borderColor: "rgba(0,0,0,0.15)",
+          placeholderLabel: "Photo",
+        },
+      ],
+    };
+  }
+
+  if (id === "bd-balloons-photo-oval") {
+    const base = createOvalPhotoFrameConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) =>
+        el.type === "imageFrame" && el.id === "photo"
+          ? {
+              ...el,
+              // Match requested inspector bounds on current preview (~438x585):
+              // left=64, top=140, width=312, height=400
+              position: { x: 14.61, y: 23.93 },
+              size: { width: 71.23, height: 68.38 },
+            }
+          : el
+      ),
+    };
+  }
+
+  if (id === "bd-floral-arch-photo") {
+    const base = createArchPhotoFrameConfig(id, name, imageUrl);
+    return {
+      ...base,
+      elements: base.elements.map((el) =>
+        el.type === "imageFrame" && el.id === "photo"
+          ? {
+              ...el,
+              // Match requested inspector bounds on current preview (~438x585):
+              // left=219 (with centered transform), top=99, width=271, height=350
+              position: { x: "center", y: 16.92 },
+              size: { width: 61.87, height: 59.83 },
             }
           : el
       ),
