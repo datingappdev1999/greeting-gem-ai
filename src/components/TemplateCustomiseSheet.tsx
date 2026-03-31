@@ -44,7 +44,7 @@ interface TemplateCustomiseSheetProps {
   }) => void;
 }
 
-const CARD_PRICE_GBP = 3;
+const CARD_PRICE_GBP = 5.59;
 
 const TemplateCustomiseSheet = ({
   open,
@@ -771,6 +771,91 @@ function ReviewStepContent({
   onCheckout: () => void;
   isGeneratingPdf: boolean;
 }) {
+  const isSuperDad = template.id === "fd-bold-super-dad";
+  const isGrillKing = template.id === "fd-grill-king";
+  const isToolsAndTies = template.id === "fd-tools-and-ties";
+  const isDadPhotoCollage = template.id === "fd-photo-collage";
+  const isGolfEnthusiast = template.id === "fd-golf-hobby";
+  const isBirthdayRibbonFlorals = template.id === "bd-text-bottom-florals";
+  const isBirthdayTopConfetti = template.id === "bd-text-top-confetti";
+  const isBirthdayTemplate = template.id.startsWith("bd-");
+  const isEasterPastelEggsGrid = template.id === "easter-pastel-eggs-grid";
+  const isEasterBunnyPhotoFrame = template.id === "easter-bunny-photo-frame";
+  const isEasterSpringFlorals = template.id === "easter-spring-florals";
+  const isEasterEggHunt = template.id === "easter-egg-hunt";
+
+  const insidePanelsBackgroundColor = isEasterEggHunt
+    ? "#E6E8BD"
+    : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+      ? "#F8F9F1"
+      : isBirthdayTemplate
+        ? "#FEF7E7"
+        : isSuperDad
+          ? "#EFEFE7"
+          : isGrillKing
+            ? "#F7F0D2"
+            : isToolsAndTies || isDadPhotoCollage
+              ? "#FBF6E9"
+              : isGolfEnthusiast
+                ? "#F2F8E0"
+                : isEasterBunnyPhotoFrame
+                  ? "#E1EDED"
+                  : isEasterSpringFlorals
+                    ? "#FFFFFF"
+                    : undefined;
+
+  const insideRightPreviewTextStyle = isSuperDad
+    ? { fontFamily: "'DM Sans', sans-serif", color: "#092B4E", fontSize: "25px" }
+    : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+      ? { color: "#886F46" }
+      : isBirthdayTemplate
+        ? { color: "#CD0317" }
+        : isGrillKing
+          ? { color: "#A22B11" }
+          : isToolsAndTies || isDadPhotoCollage
+            ? { color: "#2A405E" }
+            : isGolfEnthusiast
+              ? { color: "#10100E" }
+              : isEasterBunnyPhotoFrame
+                ? { color: "#EDC602" }
+                : isEasterPastelEggsGrid
+                  ? { color: "#200548" }
+                  : { color: "#5c4d6b" };
+
+  const insideLeftTextColor = isSuperDad
+    ? "#092B4E"
+    : isGrillKing
+      ? "#A22B11"
+      : isToolsAndTies || isDadPhotoCollage
+        ? "#2A405E"
+        : isGolfEnthusiast
+          ? "#10100E"
+          : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+            ? "#886F46"
+            : isEasterBunnyPhotoFrame || isEasterSpringFlorals
+              ? "#EDC602"
+              : undefined;
+
+  const backTextColor = isSuperDad
+    ? "#092B4E"
+    : isGrillKing
+      ? "#A22B11"
+      : isToolsAndTies || isDadPhotoCollage
+        ? "#2A405E"
+        : isGolfEnthusiast
+          ? "#10100E"
+          : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+            ? "#886F46"
+            : undefined;
+
+  const frontForceTextColor = isGolfEnthusiast
+    ? "#10100E"
+    : isBirthdayRibbonFlorals || isBirthdayTopConfetti
+      ? "#886F46"
+      : isToolsAndTies || isDadPhotoCollage
+        ? "#2A405E"
+        : undefined;
+
   const reviewTemplateConfig = getCardTemplateConfig(template);
   const flower = FLOWER_BOUQUETS.find((b) => b.id === selectedFlowerId);
   const chocolate = CHOCOLATE_OPTIONS.find((c) => c.id === selectedChocolateId);
@@ -790,6 +875,7 @@ function ReviewStepContent({
                 template={reviewTemplateConfig}
                 userContent={userContent}
                 disableBackgroundAssetOverlay
+                forceTextColor={frontForceTextColor}
                 className="h-full w-full"
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Front</p>
@@ -800,6 +886,8 @@ function ReviewStepContent({
                 photo1Url={userContent.photoUrls?.["inside-left-photo-1"] ?? null}
                 photo2Url={userContent.photoUrls?.["inside-left-photo-2"] ?? null}
                 photo3Url={userContent.photoUrls?.["inside-left-photo-3"] ?? null}
+                backgroundColor={insidePanelsBackgroundColor}
+                insideLeftTextColor={insideLeftTextColor}
                 className="h-full w-full"
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Inside Left</p>
@@ -809,6 +897,8 @@ function ReviewStepContent({
                 topText={userContent.insideRightTop}
                 middleText={userContent.insideRightMiddle}
                 bottomText={userContent.insideRightBottom}
+                textStyle={insideRightPreviewTextStyle}
+                backgroundColor={insidePanelsBackgroundColor}
                 className="h-full w-full"
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Inside Right</p>
@@ -816,6 +906,8 @@ function ReviewStepContent({
             <div className="w-[min(78vw,460px)] shrink-0 snap-start">
               <CardBackPreview
                 backMessage={userContent.backMessage}
+                backgroundColor={insidePanelsBackgroundColor}
+                textColor={backTextColor}
                 className="h-full w-full"
               />
               <p className="mt-2 text-sm text-muted-foreground text-center">Back</p>

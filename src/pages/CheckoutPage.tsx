@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FLOWER_BOUQUETS, CHOCOLATE_OPTIONS } from "@/lib/addOnsData";
+import { toast } from "sonner";
 
 type StoredOrder = {
   pdfPath: string | null;
@@ -22,23 +22,72 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const flower = useMemo(
-    () => (order?.flowerId ? FLOWER_BOUQUETS.find((f) => f.id === order.flowerId) : null),
-    [order]
+  const [isRedirectingToStripe, setIsRedirectingToStripe] = useState(false);
+  const [shippingName, setShippingName] = useState("");
+  const [shippingLine1, setShippingLine1] = useState("");
+  const [shippingLine2, setShippingLine2] = useState("");
+  const [shippingCity, setShippingCity] = useState("");
+  const [shippingPostcode, setShippingPostcode] = useState("");
+  const [shippingCountry, setShippingCountry] = useState("GB");
+
+  const cardPrice = 5.59;
+  const total = cardPrice;
+
+  const isSuccess = useMemo(
+    () => new URLSearchParams(window.location.search).get("success") === "true",
+    []
   );
-  const choc = useMemo(
-    () => (order?.chocolateId ? CHOCOLATE_OPTIONS.find((c) => c.id === order.chocolateId) : null),
-    [order]
+  const isCanceled = useMemo(
+    () => new URLSearchParams(window.location.search).get("canceled") === "true",
+    []
   );
 
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
-
-  const cardPrice = 3;
-  const flowersPrice = flower?.price ?? 0;
-  const chocolatesPrice = choc?.price ?? 0;
-  const total = cardPrice + flowersPrice + chocolatesPrice;
+  const handleStripeCheckout = async () => {
+    if (!order?.pdfPath) {
+      toast.error("Missing generated PDF. Please customise your card again.");
+      return;
+    }
+    if (!shippingName || !shippingLine1 || !shippingCity || !shippingPostcode || !shippingCountry) {
+      toast.error("Please complete your shipping address.");
+      return;
+    }
+    setIsRedirectingToStripe(true);
+    try {
+      const r = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          templateId: order.templateId,
+          pdfPath: order.pdfPath,
+          shippingAddress: {
+            name: shippingName,
+            line1: shippingLine1,
+            line2: shippingLine2,
+            city: shippingCity,
+            postcode: shippingPostcode,
+            country: shippingCountry,
+          },
+        }),
+      });
+      if (!r.ok) {
+        const err = await r
+          .json()
+          .catch(() => ({ message: "Could not start Stripe checkout." as string }));
+        toast.error(err?.message || "Could not start Stripe checkout.");
+        return;
+      }
+      const data: { url?: string } = await r.json();
+      if (!data.url) {
+        toast.error("Stripe checkout URL was not returned.");
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      toast.error("Could not reach payment service. Please try again.");
+    } finally {
+      setIsRedirectingToStripe(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,44 +95,52 @@ export default function CheckoutPage() {
       <main className="container py-10 md:py-14 max-w-3xl">
         <h1 className="font-display text-2xl md:text-3xl text-foreground mb-2">Checkout</h1>
         <p className="text-sm text-muted-foreground mb-8">
-          Enter your card details to complete your order.
+          Enter your shipping address, then complete payment securely on Stripe.
         </p>
 
         <div className="rounded-xl border border-border bg-card p-5 shadow-card">
+          {isSuccess ? (
+            <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700 mb-4">
+              Payment successful. Thank you for your order.
+            </p>
+          ) : null}
+          {isCanceled ? (
+            <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700 mb-4">
+              Payment was canceled. You can try again below.
+            </p>
+          ) : null}
+
           <div className="space-y-3">
+            <p className="font-display text-sm font-medium text-foreground">Shipping address</p>
             <div>
-              <label className="font-display text-sm font-medium text-foreground block mb-1.5">
-                Card number
-              </label>
-              <Input
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                placeholder="1234 5678 9012 3456"
-                inputMode="numeric"
-              />
+              <label className="mb-1.5 block text-sm text-foreground/90">Full name</label>
+              <Input value={shippingName} onChange={(e) => setShippingName(e.target.value)} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1.5 block text-sm text-foreground/90">Address line 1</label>
+              <Input value={shippingLine1} onChange={(e) => setShippingLine1(e.target.value)} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm text-foreground/90">
+                Address line 2 (optional)
+              </label>
+              <Input value={shippingLine2} onChange={(e) => setShippingLine2(e.target.value)} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="font-display text-sm font-medium text-foreground block mb-1.5">
-                  Expiry
-                </label>
+                <label className="mb-1.5 block text-sm text-foreground/90">City</label>
+                <Input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm text-foreground/90">Postcode</label>
                 <Input
-                  value={expiry}
-                  onChange={(e) => setExpiry(e.target.value)}
-                  placeholder="MM/YY"
-                  inputMode="numeric"
+                  value={shippingPostcode}
+                  onChange={(e) => setShippingPostcode(e.target.value)}
                 />
               </div>
               <div>
-                <label className="font-display text-sm font-medium text-foreground block mb-1.5">
-                  CVC
-                </label>
-                <Input
-                  value={cvc}
-                  onChange={(e) => setCvc(e.target.value)}
-                  placeholder="123"
-                  inputMode="numeric"
-                />
+                <label className="mb-1.5 block text-sm text-foreground/90">Country</label>
+                <Input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} />
               </div>
             </div>
           </div>
@@ -97,26 +154,6 @@ export default function CheckoutPage() {
                 <span className="font-display text-foreground/90">Card</span>
                 <span className="tabular-nums text-foreground">£{cardPrice.toFixed(2)}</span>
               </div>
-
-              {flower ? (
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-foreground/90">
-                    Flowers ({flower.name})
-                  </span>
-                  <span className="tabular-nums text-foreground">
-                    £{flower.price.toFixed(2)}
-                  </span>
-                </div>
-              ) : null}
-
-              {choc ? (
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-foreground/90">
-                    Chocolates ({choc.name})
-                  </span>
-                  <span className="tabular-nums text-foreground">£{choc.price.toFixed(2)}</span>
-                </div>
-              ) : null}
 
               <div className="pt-2 mt-2 border-t border-border flex items-center justify-between">
                 <span className="font-display text-foreground font-medium">Total</span>
@@ -139,10 +176,10 @@ export default function CheckoutPage() {
             <Button
               type="button"
               className="flex-1 font-display"
-              onClick={() => alert("Order placed (demo).")}
-              disabled={!cardNumber || !expiry || !cvc}
+              onClick={handleStripeCheckout}
+              disabled={isRedirectingToStripe}
             >
-              Pay now
+              {isRedirectingToStripe ? "Redirecting…" : "Check out now"}
             </Button>
           </div>
         </div>

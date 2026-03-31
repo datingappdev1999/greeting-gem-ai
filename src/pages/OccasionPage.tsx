@@ -178,13 +178,16 @@ const OccasionPage = () => {
                       </span>
                     ))}
                   </div>
-                  <Link
-                    to={`/occasions/${occasion.slug}/customise/${tpl.id}`}
+                  <button
+                    type="button"
                     className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleTemplateClick(tpl);
+                    }}
                   >
                     Customise
-                  </Link>
+                  </button>
                 </div>
               </motion.article>
             ))}

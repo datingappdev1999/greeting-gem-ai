@@ -8,6 +8,7 @@ import { existsSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import { chromium } from "@playwright/test";
+import Stripe from "stripe";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -138,6 +139,73 @@ export default defineConfig(({ mode }) => ({
               } finally {
                 await browser.close();
               }
+              return;
+            }
+
+            if (req.method === "POST" && req.url === "/api/create-checkout-session") {
+              const payload = await readJsonBody(req);
+              const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+              if (!stripeSecretKey) {
+                res.statusCode = 500;
+                res.setHeader("Content-Type", "application/json");
+                res.end(
+                  JSON.stringify({
+                    error: "stripe_not_configured",
+                    message: "Missing STRIPE_SECRET_KEY.",
+                  })
+                );
+                return;
+              }
+
+              const stripe = new Stripe(stripeSecretKey, {
+                apiVersion: "2025-02-24.acacia",
+              });
+
+              const host = req.headers.host;
+              if (!host) {
+                res.statusCode = 400;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ error: "missing_host_header" }));
+                return;
+              }
+              const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
+              const origin = `${protocol}://${host}`;
+
+              const session = await stripe.checkout.sessions.create({
+                mode: "payment",
+                line_items: [
+                  {
+                    price_data: {
+                      currency: "gbp",
+                      unit_amount: 559,
+                      product_data: {
+                        name: "Personalised greeting card",
+                      },
+                    },
+                    quantity: 1,
+                  },
+                ],
+                success_url: `${origin}/post-checkout?success=true`,
+                cancel_url: `${origin}/checkout?canceled=true`,
+                automatic_tax: { enabled: true },
+                metadata: {
+                  templateId: String(payload.templateId ?? ""),
+                  pdfPath: String(payload.pdfPath ?? ""),
+                  shippingName: String((payload.shippingAddress as Record<string, unknown> | undefined)?.name ?? ""),
+                  shippingLine1: String((payload.shippingAddress as Record<string, unknown> | undefined)?.line1 ?? ""),
+                  shippingLine2: String((payload.shippingAddress as Record<string, unknown> | undefined)?.line2 ?? ""),
+                  shippingCity: String((payload.shippingAddress as Record<string, unknown> | undefined)?.city ?? ""),
+                  shippingPostcode: String((payload.shippingAddress as Record<string, unknown> | undefined)?.postcode ?? ""),
+                  shippingCountry: String((payload.shippingAddress as Record<string, unknown> | undefined)?.country ?? ""),
+                },
+              });
+
+              res.setHeader("Content-Type", "application/json");
+              res.end(
+                JSON.stringify({
+                  url: session.url,
+                })
+              );
               return;
             }
 
